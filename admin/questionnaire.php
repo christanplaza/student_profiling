@@ -1,13 +1,18 @@
 <?php
 session_start();
-$conn = mysqli_connect('localhost', 'root', '', 'student_profiling');
-
-if ($conn) {
-    $sql = "SELECT * FROM questionnaire";
-
-    $questionnaire_res = mysqli_query($conn, $sql);
+if (isset($_GET['id'])) {
+    $conn = mysqli_connect('localhost', 'root', '', 'student_profiling');
+    $id = $_GET['id'];
+    if ($conn) {
+        $sql = "SELECT * FROM questionnaire WHERE id = '$id'";
+    
+        $questionnaire_res = mysqli_query($conn, $sql);
+        $questionnaire = $questionnaire_res->fetch_assoc();
+    } else {
+        echo "Couldn't connect to database.";
+    }
 } else {
-    echo "Couldn't connect to database.";
+    header("location: /student_profiling/admin/");
 }
 include('../logout.php');
 ?>
@@ -60,14 +65,15 @@ include('../logout.php');
                 <div class="col-8">
                     <div class="card shadow">
                         <div class="card-body">
-                            <div class="display-6">Questionnaire Management</div>
+                            <div class="display-6 mb-2"><?php echo $questionnaire['name']; ?></div>
+                            <p><?php echo $questionnaire['description']; ?></p>
                             <div class="row mt-4">
                                 <div class="col-12">
                                     <table class="table table-striped align-middle">
                                         <thead>
                                             <tr class="table-primary">
-                                                <th>Assessment</th>
-                                                <th>No. of Questions</th>
+                                                <th>Question #</th>
+                                                <th>Question</th>
                                                 <th>Actions</th>
                                             </tr>
                                         </thead>
