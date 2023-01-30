@@ -9,14 +9,14 @@ if ($conn) {
 } else {
     echo "Couldn't connect to database.";
 }
-include('../logout.php');
+include('../../logout.php');
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <?php include_once "../components/header.php"; ?>
+    <?php include_once "../../components/header.php"; ?>
     <title>Student Profiling | Admin</title>
 </head>
 
@@ -55,34 +55,21 @@ include('../logout.php');
         <div class="mt-5">
             <div class="row">
                 <div class="col-4">
-                    <?php include_once "components/panel.php" ?>
+                    <?php include_once "../components/panel.php" ?>
                 </div>
                 <div class="col-8">
                     <div class="card shadow">
                         <div class="card-body">
-                            <div class="display-6">Questionnaire Management</div>
+                            <div class="display-6">Add a new Question</div>
                             <div class="row mt-4">
                                 <div class="col-12">
-                                    <table class="table table-striped align-middle">
-                                        <thead>
-                                            <tr class="table-primary">
-                                                <th>Assessment</th>
-                                                <th>No. of Questions</th>
-                                                <th>Actions</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php while ($row = $questionnaire_res->fetch_assoc()) : ?>
-                                                <tr>
-                                                    <td><?php echo $row['name']; ?></td>
-                                                    <td>0</td>
-                                                    <td>
-                                                        <a href="/student_profiling/admin/questionnaire.php?id=<?php echo $row['id']; ?>" class="btn btn-primary">View Details</a>
-                                                    </td>
-                                                </tr>
-                                            <?php endwhile; ?>
-                                        </tbody>
-                                    </table>
+                                    <form method="POST">
+                                        <div class="mb-3">
+                                            <label for="question_text">Question</label>
+                                            <input type="text" name="question_text" id="question_text" class="form-control">
+                                        </div>
+
+                                    </form>
                                 </div>
                             </div>
                         </div>

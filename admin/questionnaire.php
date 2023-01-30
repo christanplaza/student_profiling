@@ -5,7 +5,7 @@ if (isset($_GET['id'])) {
     $id = $_GET['id'];
     if ($conn) {
         $sql = "SELECT * FROM questionnaire WHERE id = '$id'";
-    
+
         $questionnaire_res = mysqli_query($conn, $sql);
         $questionnaire = $questionnaire_res->fetch_assoc();
     } else {
@@ -68,6 +68,9 @@ include('../logout.php');
                             <div class="display-6 mb-2"><?php echo $questionnaire['name']; ?></div>
                             <p><?php echo $questionnaire['description']; ?></p>
                             <div class="row mt-4">
+                                <div class="col-12 mb-4">
+                                    <a href="/student_profiling/admin/questions/add_question.php?id=<?php echo $id; ?>" class="float-end btn btn-success">Add Question</a>
+                                </div>
                                 <div class="col-12">
                                     <table class="table table-striped align-middle">
                                         <thead>
@@ -78,7 +81,7 @@ include('../logout.php');
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <?php while($row = $questionnaire_res->fetch_assoc()): ?>
+                                            <?php while ($row = $questionnaire_res->fetch_assoc()) : ?>
                                                 <tr>
                                                     <td><?php echo $row['name']; ?></td>
                                                     <td>0</td>

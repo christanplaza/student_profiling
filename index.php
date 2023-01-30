@@ -38,7 +38,7 @@ if (isset($_POST['submit'])) {
                         $result = array("status" => "failed", "message" => "Login failed, try again.");
                     }
                 } else {
-                    $result = array("status" => "failed", "message" => "Incorrect email/password.");
+                    $result = array("status" => "failed", "message" => "User already exists.");
                 }
             }
         } else {
