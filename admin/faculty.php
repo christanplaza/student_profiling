@@ -1,22 +1,39 @@
 <?php
 session_start();
 $conn = mysqli_connect('localhost', 'root', '', 'student_profiling');
+if (isset($_GET['id'])) {
+    if ($conn) {
+        $id = $_GET['id'];
+        $sql = "SELECT * FROM users WHERE id = '$id' AND role = 'faculty'";
 
-if ($conn) {
-    $sql = "SELECT * FROM questionnaire";
+        $user_res = mysqli_query($conn, $sql);
+        $user = mysqli_fetch_assoc($user_res);
+    } else {
+        echo "Couldn't connect to database.";
+    }
+} else if (isset($_POST['id'])) {
 
-    $questionnaire_res = mysqli_query($conn, $sql);
+    if ($conn) {
+        $id = $_POST['id'];
+        $sql = "DELETE FROM users WHERE id = '$id'";
+
+        mysqli_query($conn, $sql);
+        header('location: /student_profiling/admin/faculty_management.php');
+    } else {
+        echo "Couldn't connect to database.";
+    }
 } else {
-    echo "Couldn't connect to database.";
+    header('location: /student_profiling/admin/faculty_management.php');
 }
-include('../../logout.php');
+include('../logout.php');
+
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <?php include_once "../../components/header.php"; ?>
+    <?php include_once "../components/header.php"; ?>
     <title>Student Profiling | Admin</title>
 </head>
 
@@ -55,27 +72,34 @@ include('../../logout.php');
         <div class="mt-5">
             <div class="row">
                 <div class="col-4">
-                    <?php include_once "../components/panel.php" ?>
+                    <?php include_once "components/panel.php" ?>
                 </div>
                 <div class="col-8">
                     <div class="card shadow">
+                        <div class="card-header bg-secondary-subtle">Faculty Profile</div>
                         <div class="card-body">
-                            <div class="display-6">Add a new Question</div>
-                            <div class="row mt-4">
-                                <div class="col-12">
-                                    <form method="POST">
-                                        <div class="mb-3">
-                                            <label for="question_text" class="form-label">Question</label>
-                                            <input type="text" name="question_text" id="question_text" class="form-control">
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="question_image" class="form-label">Image (Optional)</label>
-                                            <input type="file" name="question_image" id="question_image" class="form-control">
-                                        </div>
-                                        <input type="submit" value="Add Question" class="btn btn-success">
-                                    </form>
-                                </div>
-                            </div>
+                            <table class="table">
+                                <tr>
+                                    <td>Name</td>
+                                    <td><?php echo $user['name']; ?></td>
+                                </tr>
+                                <tr>
+                                    <td>Username</td>
+                                    <td><?php echo $user['username']; ?></td>
+                                </tr>
+                                <tr>
+                                    <td>Age</td>
+                                    <td><?php echo $user['age']; ?></td>
+                                </tr>
+                                <tr>
+                                    <td>Gender</td>
+                                    <td><?php echo $user['gender']; ?></td>
+                                </tr>
+                                <tr>
+                                    <td>Address</td>
+                                    <td><?php echo $user['address']; ?></td>
+                                </tr>
+                            </table>
                         </div>
                     </div>
                 </div>

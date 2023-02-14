@@ -1,6 +1,14 @@
 <?php
 session_start();
+$conn = mysqli_connect('localhost', 'root', '', 'student_profiling');
 
+if ($conn) {
+    $sql = "SELECT * FROM users WHERE role = 'faculty'";
+
+    $faculty_res = mysqli_query($conn, $sql);
+} else {
+    echo "Couldn't connect to database.";
+}
 include('../logout.php');
 
 ?>
@@ -54,6 +62,35 @@ include('../logout.php');
                     <div class="card shadow">
                         <div class="card-body">
                             <div class="display-6">Faculty Management</div>
+                            <div class="row mt-4">
+                                <div class="col-12">
+
+                                    <table class="table table-striped align-middle">
+                                        <thead>
+                                            <tr class="table-primary">
+                                                <th>Name</th>
+                                                <th>Username</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php while ($row = $faculty_res->fetch_assoc()) : ?>
+                                                <tr>
+                                                    <td><?php echo $row['name']; ?></td>
+                                                    <td><?php echo $row['username']; ?></td>
+                                                    <td class="d-flex justify-content-evenly">
+                                                        <a href="/student_profiling/admin/faculty.php?id=<?php echo $row['id']; ?>" class="btn btn-primary">View Details</a>
+                                                        <form action="/student_profiling/admin/faculty.php?" method="POST">
+                                                            <input type="hidden" name="id" id="id" value="<?php echo $row['id']; ?>" />
+                                                            <button type="submit" class="btn btn-danger">Delete User</button>
+                                                        </form>
+                                                    </td>
+                                                </tr>
+                                            <?php endwhile; ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
