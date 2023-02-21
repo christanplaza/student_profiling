@@ -8,6 +8,9 @@ if (isset($_GET['id'])) {
 
         $questionnaire_res = mysqli_query($conn, $sql);
         $questionnaire = $questionnaire_res->fetch_assoc();
+
+        $sql = "SELECT * FROM questions WHERE questionnaire_id = '$id'";
+        $questions_res = mysqli_query($conn, $sql);
     } else {
         echo "Couldn't connect to database.";
     }
@@ -75,18 +78,16 @@ include('../logout.php');
                                     <table class="table table-striped align-middle">
                                         <thead>
                                             <tr class="table-primary">
-                                                <th>Question #</th>
                                                 <th>Question</th>
                                                 <th>Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <?php while ($row = $questionnaire_res->fetch_assoc()) : ?>
+                                            <?php while ($row = $questions_res->fetch_assoc()) : ?>
                                                 <tr>
-                                                    <td><?php echo $row['name']; ?></td>
-                                                    <td>0</td>
+                                                    <td><?php echo $row['question_text']; ?></td>
                                                     <td>
-                                                        <a href="/student_profiling/admin/questionnaire.php?id=<?php echo $row['id']; ?>" class="btn btn-primary">View Details</a>
+                                                        <a href="" class="btn btn-sm btn-danger">Remove Question</a>
                                                     </td>
                                                 </tr>
                                             <?php endwhile; ?>

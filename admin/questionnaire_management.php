@@ -67,7 +67,6 @@ include('../logout.php');
                                         <thead>
                                             <tr class="table-primary">
                                                 <th>Assessment</th>
-                                                <th>No. of Questions</th>
                                                 <th>Actions</th>
                                             </tr>
                                         </thead>
@@ -75,7 +74,6 @@ include('../logout.php');
                                             <?php while ($row = $questionnaire_res->fetch_assoc()) : ?>
                                                 <tr>
                                                     <td><?php echo $row['name']; ?></td>
-                                                    <td>0</td>
                                                     <td>
                                                         <a href="/student_profiling/admin/questionnaire.php?id=<?php echo $row['id']; ?>" class="btn btn-primary">View Details</a>
                                                     </td>
