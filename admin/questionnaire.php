@@ -70,6 +70,22 @@ include('../logout.php');
                         <div class="card-body">
                             <div class="display-6 mb-2"><?php echo $questionnaire['name']; ?></div>
                             <p><?php echo $questionnaire['description']; ?></p>
+                            <p>Questionnaire Type:
+                                <strong>
+                                    <?php switch ($questionnaire['question_type']) {
+                                        case "range":
+                                            echo "Ranged";
+                                            break;
+                                        case "rank":
+                                            echo "Ranking";
+                                            break;
+                                        case "choices":
+                                            echo "Choices";
+                                            break;
+                                    }
+                                    ?>
+                                </strong>
+                            </p>
                             <div class="row mt-4">
                                 <div class="col-12 mb-4">
                                     <a href="/student_profiling/admin/questions/add_question.php?id=<?php echo $id; ?>" class="float-end btn btn-success">Add Question</a>
@@ -79,18 +95,28 @@ include('../logout.php');
                                         <thead>
                                             <tr class="table-primary">
                                                 <th>Question</th>
+                                                <th>Group</th>
                                                 <th>Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <?php while ($row = $questions_res->fetch_assoc()) : ?>
+                                            <?php if ($questions_res) : ?>
+                                                <?php while ($row = $questions_res->fetch_assoc()) : ?>
+                                                    <tr>
+                                                        <td><?php echo $row['question_text']; ?></td>
+                                                        <td>
+                                                            <form action="/student_profiling/admin/questions/remove_question.php" method="POST">
+                                                                <input type="hidden" name="id" value="<?php echo $row['id']; ?>" />
+                                                                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                                            </form>
+                                                        </td>
+                                                    </tr>
+                                                <?php endwhile; ?>
+                                            <?php else : ?>
                                                 <tr>
-                                                    <td><?php echo $row['question_text']; ?></td>
-                                                    <td>
-                                                        <a href="" class="btn btn-sm btn-danger">Remove Question</a>
-                                                    </td>
+                                                    <td colspan="3" class="text-center">This Questionnaire has no Questions</td>
                                                 </tr>
-                                            <?php endwhile; ?>
+                                            <?php endif ?>
                                         </tbody>
                                     </table>
                                 </div>

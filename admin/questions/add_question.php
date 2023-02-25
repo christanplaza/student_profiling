@@ -6,37 +6,46 @@ if (isset($_GET['id'])) {
     $questionnaire_id = $_GET['id'];
 
     if ($conn) {
-        if (isset($_POST['question_text'])) {
-            $question_text = $_POST['question_text'];
-            $sql = "INSERT into questions (questionnaire_id, question_text) VALUES ('$questionnaire_id', '$question_text')";
-            $res = mysqli_query($conn, $sql);
-            if ($res) {
-                header('location: /student_profiling/admin/questionnaire.php?id=' . $questionnaire_id);
+        // Get Questionnaire Info
+        $sql = "SELECT * FROM questionnaire WHERE id = '$questionnaire_id'";
+        $questionnaire_res = mysqli_query($conn, $sql);
+        $questionnaire = $questionnaire_res->fetch_assoc();
+
+        $sql = "SELECT * FROM question_group WHERE questionnaire_id = '$questionnaire_id'";
+        $question_group_res = mysqli_query($conn, $sql);
+        if ($question_group_res) {
+            $question_group = $question_group_res->fetch_assoc();
+            $question_group_id = $question_group['id'];
+
+            if (isset($_POST['submit'])) {
+                $question_text = $_POST['question_text'];
+
+                // If there is image
+                if (!empty($_FILES["question_file"]["name"])) {
+                    $fileName = basename($_FILES["question_file"]["name"]);
+                    $fileType = pathinfo($fileName, PATHINFO_EXTENSION);
+
+                    // Allow only certain file formats
+                    $allowTypes = array('jpg', 'png', 'jpeg', 'gif');
+                    if (in_array($fileType, $allowTypes)) {
+                        $image = $_FILES["question_file"]["tmp_name"];
+                        $imgContent = addslashes(file_get_contents($image));
+
+                        $insert = "INSERT into questions (question_group_id, question_text, question_image) VALUES ('$question_group_id', '$question_text', '$imgContent')";
+
+                        if (mysqli_query($conn, $insert)) {
+                            echo "File Uploaded";
+                        } else {
+                            echo $conn->error;
+                        }
+                    }
+                }
+                // $sql = "INSERT into questions (questionnaire_id, question_text) VALUES ('$questionnaire_id', '$question_text')";
+                // $res = mysqli_query($conn, $sql);
+                // if ($res) {
+                //     header('location: /student_profiling/admin/questionnaire.php?id=' . $questionnaire_id);
+                // }
             }
-            // if (!empty($_FILES["question_image"]["name"])) {
-            //     // Get file info 
-            //     $fileName = basename($_FILES["question_image"]["name"]);
-            //     $fileType = pathinfo($fileName, PATHINFO_EXTENSION);
-
-            //     // Allow certain file formats 
-            //     $allowTypes = array('jpg', 'png', 'jpeg', 'gif');
-            //     if (in_array($fileType, $allowTypes)) {
-            //         $image = $_FILES['question_image']['tmp_name'];
-            //         $imgContent = addslashes(file_get_contents($image));
-
-            //         $sql = "INSERT into questions (questionnaire_id, question_text, question_image) VALUES ('$questionnaire_id', '$question_text', '$imgContent')";
-
-            //         if (mysqli_query($conn, $sql)) {
-            //             $status = 'success';
-            //             $statusMsg = "File uploaded successfully.";
-            //         } else {
-            //             echo mysqli_query($conn, $sql);
-            //         }
-            //     } else {
-            //         $statusMsg = 'Sorry, only JPG, JPEG, PNG, & GIF files are allowed to upload.';
-            //     }
-            // } else {
-            // }
         }
     } else {
         echo "Couldn't connect to database.";
@@ -102,10 +111,27 @@ include('../../logout.php');
                                             <label for="question_text" class="form-label">Question</label>
                                             <input type="text" name="question_text" id="question_text" class="form-control required">
                                         </div>
-                                        <!-- <div class="mb-3">
-                                            <label for="question_image" class="form-label">Image (Optional)</label>
-                                            <input type="file" name="question_image" id="question_image" class="form-control">
-                                        </div> -->
+                                        <?php switch ($questionnaire['question_type']) {
+                                            case "range": ?>
+                                                <!-- <div class="mb-3">
+                                                    <label for="question_text" class="form-label">Answer Range</label>
+                                                    <input type="text" name="question_text" id="question_text" class="form-control required">
+                                                </div> -->
+                                            <?php break;
+                                            case "rank": ?>
+                                                <div class="mb-3">
+                                                    <label for="question_text" class="form-label">Question</label>
+                                                    <input type="text" name="question_text" id="question_text" class="form-control" required>
+                                                </div>
+                                            <?php break;
+                                            case "choices": ?>
+                                                <div class="mb-3">
+                                                    <label for="question_file" class="form-label">Image (optional)</label>
+                                                    <input type="file" name="question_file" id="question_file" class="form-control" required>
+                                                </div>
+                                        <?php break;
+                                        }
+                                        ?>
                                         <input type="submit" name="submit" value="Add Question" class="btn btn-success">
                                     </form>
                                 </div>
