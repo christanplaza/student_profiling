@@ -1,5 +1,6 @@
 <?php
 session_start();
+$letters = ["A", "B", "C", "D", "E", "F", "G", "H"];
 
 if (isset($_GET['id'])) {
     $conn = mysqli_connect('localhost', 'root', '', 'student_profiling');
@@ -20,6 +21,7 @@ if (isset($_GET['id'])) {
 
                 if (isset($_POST['submit'])) {
                     $question_text = $_POST['question_text'];
+                    $correct_answer = $_POST['correct_answer'];
 
                     // If there is image
                     if (!empty($_FILES["question_file"]["name"])) {
@@ -27,26 +29,18 @@ if (isset($_GET['id'])) {
                         $fileType = pathinfo($fileName, PATHINFO_EXTENSION);
 
                         // Allow only certain file formats
-                        $allowTypes = array('jpg', 'png', 'jpeg', 'gif');
+                        $allowTypes = array('jpg', 'png', 'jpeg', 'gif', 'JPG', 'JPEG', 'PNG', 'GIF');
                         if (in_array($fileType, $allowTypes)) {
                             $image = $_FILES["question_file"]["tmp_name"];
                             $imgContent = addslashes(file_get_contents($image));
 
-                            $insert = "INSERT into questions (question_group_id, question_text, question_image) VALUES ('$question_group_id', '$question_text', '$imgContent')";
+                            $insert = "INSERT into questions (question_group_id, question_text, question_image, correct_answer) VALUES ('$question_group_id', '$question_text', '$imgContent', '$correct_answer')";
 
                             if (mysqli_query($conn, $insert)) {
                                 header('location: /student_profiling/admin/questionnaire.php?id=' . $questionnaire_id);
                             } else {
                                 echo $conn->error;
                             }
-                        }
-                    } else {
-                        $insert = "INSERT into questions (question_group_id, question_text) VALUES ('$question_group_id', '$question_text')";
-
-                        if (mysqli_query($conn, $insert)) {
-                            header('location: /student_profiling/admin/questionnaire.php?id=' . $questionnaire_id);
-                        } else {
-                            echo $conn->error;
                         }
                     }
                 }
@@ -182,8 +176,17 @@ include('../../logout.php');
                                             <?php break;
                                             case "choices": ?>
                                                 <div class="mb-3">
-                                                    <label for="question_file" class="form-label">Image (optional)</label>
-                                                    <input type="file" name="question_file" id="question_file" class="form-control">
+                                                    <label for="question_file" class="form-label">Image</label>
+                                                    <input type="file" name="question_file" id="question_file" class="form-control" required>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label" for="question<?php echo $count; ?>">The Correct Answer</label>
+                                                    <select class="form-control" name="correct_answer" required>
+                                                        <option selected disabled>Choose the Correct Answer</option>
+                                                        <?php for ($i = 0; $i < 8; $i++) : ?>
+                                                            <option value="<?php echo $letters[$i]; ?>"><?php echo $letters[$i]; ?></option>
+                                                        <?php endfor; ?>
+                                                    </select>
                                                 </div>
                                         <?php break;
                                         }

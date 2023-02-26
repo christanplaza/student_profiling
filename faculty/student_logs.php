@@ -9,7 +9,7 @@ include('../logout.php');
 
 <head>
     <?php include_once "../components/header.php"; ?>
-    <title>Student Profiling | Admin</title>
+    <title>Student Profiling | Faculty</title>
 </head>
 
 <body>
@@ -52,7 +52,7 @@ include('../logout.php');
                 <div class="col-8">
                     <div class="card shadow">
                         <div class="card-body">
-                            <div class="display-6">Homepage</div>
+                            <div class="display-6">Student Logs</div>
                         </div>
                     </div>
                 </div>
