@@ -9,12 +9,21 @@ if ($conn) {
         $questionnaire_name = $_POST['questionnaire_name'];
         $questionnaire_desc = $_POST['questionnaire_desc'];
         $questionnaire_instruction = $_POST['questionnaire_instruction'];
+        $questionnaire_range = $_POST['questionnaire_range'];
 
-        $sql = "INSERT into questionnaire (question_type, name, description, instruction) VALUES ('$questionnaire_type', '$questionnaire_name', '$questionnaire_desc', '$questionnaire_instruction')";
+        if ($questionnaire_type == "range" && isset($questionnaire_range) && strlen($questionnaire_range) > 0) {
+            $sql = "INSERT into questionnaire (question_type, name, description, instruction, selection_range) VALUES ('$questionnaire_type', '$questionnaire_name', '$questionnaire_desc', '$questionnaire_instruction', '$questionnaire_range')";
+        } else if ($questionnaire_type == "range" && isset($questionnaire_range) && strlen($questionnaire_range) == 0) {
+            $sql = "INSERT into questionnaire (question_type, name, description, instruction, selection_range) VALUES ('$questionnaire_type', '$questionnaire_name', '$questionnaire_desc', '$questionnaire_instruction', '5')";
+        } else {
+            $sql = "INSERT into questionnaire (question_type, name, description, instruction) VALUES ('$questionnaire_type', '$questionnaire_name', '$questionnaire_desc', '$questionnaire_instruction')";
+        }
+
         $res = mysqli_query($conn, $sql);
         if ($res) {
 
-            if ($questionnaire_type == "choices") {
+            // If choices
+            if ($questionnaire_type == "choices" || $questionnaire_type == "range") {
                 $questionnaire_id = $conn->insert_id;
 
                 $sql = "INSERT INTO question_group (questionnaire_id) VALUES ('$questionnaire_id')";
@@ -24,6 +33,15 @@ if ($conn) {
                 } else {
                     echo $conn->error;
                 }
+            } else if ($questionnaire_type == "rank") {
+                $questionnaire_id = $conn->insert_id;
+
+                for ($i = 0; $i < 3; $i++) {
+                    $count = $i + 1;
+                    $sql = "INSERT INTO question_group (questionnaire_id, count) VALUES ('$questionnaire_id', '$count')";
+                    mysqli_query($conn, $sql);
+                }
+                header('location: /student_profiling/admin/questionnaire_management.php');
             }
             header('location: /student_profiling/admin/questionnaire_management.php');
         } else {
@@ -110,7 +128,7 @@ include('../../logout.php');
                                             </select>
                                         </div>
                                         <div class="mb-3">
-                                            <label for="questionnaire_range" class="form-label">Range (Number of choices, e.g for range 1-5, put 5)</label>
+                                            <label for="questionnaire_range" class="form-label">Range (Number of choices, e.g for range 1-5, put 5. Default is 5)</label>
                                             <input type="number" min="1" name="questionnaire_range" id="questionnaire_range" class="form-control">
                                         </div>
                                         <input type="submit" name="submit" value="Create Questionnaire" class="btn btn-success">

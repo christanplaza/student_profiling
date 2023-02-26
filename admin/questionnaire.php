@@ -9,8 +9,33 @@ if (isset($_GET['id'])) {
         $questionnaire_res = mysqli_query($conn, $sql);
         $questionnaire = $questionnaire_res->fetch_assoc();
 
-        $sql = "SELECT * FROM questions WHERE questionnaire_id = '$id'";
-        $questions_res = mysqli_query($conn, $sql);
+        $sql = "SELECT * FROM question_group WHERE questionnaire_id = '$id'";
+        $question_group_res = mysqli_query($conn, $sql);
+
+        if ($questionnaire['question_type'] == "choices" || $questionnaire['question_type'] == "range" && $question_group_res) {
+            $question_group = $question_group_res->fetch_assoc();
+            $question_group_id = $question_group['id'];
+
+            $sql = "SELECT * FROM questions WHERE question_group_id = '$question_group_id'";
+            $questions_res = mysqli_query($conn, $sql);
+        }
+
+        if ($questionnaire['question_type'] == "rank" && $question_group_res) {
+            $allQuestions = array();
+            while ($question_group = $question_group_res->fetch_assoc()) {
+                $question_group_id = $question_group['id'];
+
+                $sql = "SELECT * FROM questions WHERE question_group_id = '$question_group_id'";
+                $questions_res = mysqli_query($conn, $sql);
+                while ($question = $questions_res->fetch_assoc()) {
+                    $question['group'] = $question_group['count'];
+                    array_push($allQuestions, $question);
+                }
+            }
+        }
+
+        // $sql = "SELECT * FROM questions WHERE questionnaire_id = '$id'";
+        // $questions_res = mysqli_query($conn, $sql);
     } else {
         echo "Couldn't connect to database.";
     }
@@ -95,15 +120,58 @@ include('../logout.php');
                                         <thead>
                                             <tr class="table-primary">
                                                 <th>Question</th>
-                                                <th>Group</th>
+                                                <?php if ($questionnaire['question_type'] == "rank") : ?>
+                                                    <th>Group</th>
+                                                <?php endif; ?>
                                                 <th>Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <?php if ($questions_res) : ?>
+                                            <?php if ($questionnaire['question_type'] == "choices" && $questions_res) : ?>
                                                 <?php while ($row = $questions_res->fetch_assoc()) : ?>
                                                     <tr>
-                                                        <td><?php echo $row['question_text']; ?></td>
+                                                        <td>
+                                                            <a href="/student_profiling/admin/questions/question_detail.php?id=<?php echo $row['id']; ?>&type=<?php echo $questionnaire['question_type']; ?>">
+                                                                <?php echo $row['question_text']; ?>
+                                                            </a>
+                                                        </td>
+                                                        <?php if ($questionnaire['question_type'] == "rank") : ?>
+                                                            <td> Grouping thing </td>
+                                                        <?php endif; ?>
+                                                        <td>
+                                                            <form action="/student_profiling/admin/questions/remove_question.php" method="POST">
+                                                                <input type="hidden" name="id" value="<?php echo $row['id']; ?>" />
+                                                                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                                            </form>
+                                                        </td>
+                                                    </tr>
+                                                <?php endwhile; ?>
+                                            <?php elseif ($questionnaire['question_type'] == "rank" && $questions_res) : ?>
+                                                <?php foreach ($allQuestions as $question) : ?>
+                                                    <tr>
+                                                        <td>
+                                                            <?php echo $question['question_text']; ?>
+                                                        </td>
+                                                        <td><?php echo $question['group']; ?></td>
+                                                        <td>
+                                                            <form action="/student_profiling/admin/questions/remove_question.php" method="POST">
+                                                                <input type="hidden" name="id" value="<?php echo $question['id']; ?>" />
+                                                                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                                            </form>
+                                                        </td>
+                                                    </tr>
+                                                <?php endforeach; ?>
+                                            <?php elseif ($questionnaire['question_type'] == "range" && $questions_res) : ?>
+                                                <?php while ($row = $questions_res->fetch_assoc()) : ?>
+                                                    <tr>
+                                                        <td>
+                                                            <a href="/student_profiling/admin/questions/question_detail.php?id=<?php echo $row['id']; ?>&type=<?php echo $questionnaire['question_type']; ?>">
+                                                                <?php echo $row['question_text']; ?>
+                                                            </a>
+                                                        </td>
+                                                        <?php if ($questionnaire['question_type'] == "rank") : ?>
+                                                            <td> Grouping thing </td>
+                                                        <?php endif; ?>
                                                         <td>
                                                             <form action="/student_profiling/admin/questions/remove_question.php" method="POST">
                                                                 <input type="hidden" name="id" value="<?php echo $row['id']; ?>" />

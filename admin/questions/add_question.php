@@ -13,44 +13,86 @@ if (isset($_GET['id'])) {
 
         $sql = "SELECT * FROM question_group WHERE questionnaire_id = '$questionnaire_id'";
         $question_group_res = mysqli_query($conn, $sql);
-        if ($question_group_res) {
-            $question_group = $question_group_res->fetch_assoc();
-            $question_group_id = $question_group['id'];
+        if ($questionnaire['question_type'] == "choices") {
+            if ($question_group_res) {
+                $question_group = $question_group_res->fetch_assoc();
+                $question_group_id = $question_group['id'];
 
-            if (isset($_POST['submit'])) {
-                $question_text = $_POST['question_text'];
+                if (isset($_POST['submit'])) {
+                    $question_text = $_POST['question_text'];
 
-                // If there is image
-                if (!empty($_FILES["question_file"]["name"])) {
-                    $fileName = basename($_FILES["question_file"]["name"]);
-                    $fileType = pathinfo($fileName, PATHINFO_EXTENSION);
+                    // If there is image
+                    if (!empty($_FILES["question_file"]["name"])) {
+                        $fileName = basename($_FILES["question_file"]["name"]);
+                        $fileType = pathinfo($fileName, PATHINFO_EXTENSION);
 
-                    // Allow only certain file formats
-                    $allowTypes = array('jpg', 'png', 'jpeg', 'gif');
-                    if (in_array($fileType, $allowTypes)) {
-                        $image = $_FILES["question_file"]["tmp_name"];
-                        $imgContent = addslashes(file_get_contents($image));
+                        // Allow only certain file formats
+                        $allowTypes = array('jpg', 'png', 'jpeg', 'gif');
+                        if (in_array($fileType, $allowTypes)) {
+                            $image = $_FILES["question_file"]["tmp_name"];
+                            $imgContent = addslashes(file_get_contents($image));
 
-                        $insert = "INSERT into questions (question_group_id, question_text, question_image) VALUES ('$question_group_id', '$question_text', '$imgContent')";
+                            $insert = "INSERT into questions (question_group_id, question_text, question_image) VALUES ('$question_group_id', '$question_text', '$imgContent')";
+
+                            if (mysqli_query($conn, $insert)) {
+                                header('location: /student_profiling/admin/questionnaire.php?id=' . $questionnaire_id);
+                            } else {
+                                echo $conn->error;
+                            }
+                        }
+                    } else {
+                        $insert = "INSERT into questions (question_group_id, question_text) VALUES ('$question_group_id', '$question_text')";
 
                         if (mysqli_query($conn, $insert)) {
-                            echo "File Uploaded";
+                            header('location: /student_profiling/admin/questionnaire.php?id=' . $questionnaire_id);
                         } else {
                             echo $conn->error;
                         }
                     }
                 }
-                // $sql = "INSERT into questions (questionnaire_id, question_text) VALUES ('$questionnaire_id', '$question_text')";
-                // $res = mysqli_query($conn, $sql);
-                // if ($res) {
-                //     header('location: /student_profiling/admin/questionnaire.php?id=' . $questionnaire_id);
-                // }
+            }
+        } else if ($questionnaire['question_type'] == "rank") {
+            if ($question_group_res) {
+                if (isset($_POST["submit"])) {
+                    $question_text = $_POST['question_text'];
+
+                    while ($question_group = $question_group_res->fetch_assoc()) {
+                        if ($_POST['question_group'] == $question_group['count']) {
+                            $question_group_id = $question_group['id'];
+                            $insert = "INSERT into questions (question_group_id, question_text) VALUES ('$question_group_id', '$question_text')";
+
+                            if (mysqli_query($conn, $insert)) {
+                                header('location: /student_profiling/admin/questionnaire.php?id=' . $questionnaire_id);
+                            } else {
+                                echo $conn->error;
+                            }
+                        }
+                    }
+                }
+            }
+        } else if ($questionnaire['question_type'] == "range") {
+            if ($question_group_res) {
+                $question_group = $question_group_res->fetch_assoc();
+                $question_group_id = $question_group['id'];
+
+                if (isset($_POST["submit"])) {
+                    $question_text = $_POST['question_text'];
+                    $disagree_text = $_POST['disagree_text'];
+                    $agree_text = $_POST['agree_text'];
+
+                    $insert = "INSERT into questions (question_group_id, question_text, agree_text, disagree_text) VALUES ('$question_group_id', '$question_text', '$agree_text', '$disagree_text')";
+
+                    if (mysqli_query($conn, $insert)) {
+                        header('location: /student_profiling/admin/questionnaire.php?id=' . $questionnaire_id);
+                    } else {
+                        echo $conn->error;
+                    }
+                }
             }
         }
     } else {
         echo "Couldn't connect to database.";
     }
-} else {
 }
 include('../../logout.php');
 ?>
@@ -109,25 +151,39 @@ include('../../logout.php');
                                     <form method="POST" enctype="multipart/form-data">
                                         <div class="mb-3">
                                             <label for="question_text" class="form-label">Question</label>
-                                            <input type="text" name="question_text" id="question_text" class="form-control required">
+                                            <input type="text" name="question_text" id="question_text" class="form-control" required>
                                         </div>
                                         <?php switch ($questionnaire['question_type']) {
                                             case "range": ?>
-                                                <!-- <div class="mb-3">
-                                                    <label for="question_text" class="form-label">Answer Range</label>
-                                                    <input type="text" name="question_text" id="question_text" class="form-control required">
-                                                </div> -->
+                                                <div class="row">
+                                                    <div class="col-6">
+                                                        <div class="mb-3">
+                                                            <label for="disagree_text" class="form-label">Disagree Label</label>
+                                                            <input type="text" name="disagree_text" id="disagree_text" class="form-control">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <div class="mb-3">
+                                                            <label for="agree_text" class="form-label">Agree Label</label>
+                                                            <input type="text" name="agree_text" id="agree_text" class="form-control">
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             <?php break;
                                             case "rank": ?>
                                                 <div class="mb-3">
-                                                    <label for="question_text" class="form-label">Question</label>
-                                                    <input type="text" name="question_text" id="question_text" class="form-control" required>
+                                                    <label for="question_group" class="form-label">Question Group</label>
+                                                    <select name="question_group" class="form-select" required>
+                                                        <option value="1">1</option>
+                                                        <option value="2">2</option>
+                                                        <option value="3">3</option>
+                                                    </select>
                                                 </div>
                                             <?php break;
                                             case "choices": ?>
                                                 <div class="mb-3">
                                                     <label for="question_file" class="form-label">Image (optional)</label>
-                                                    <input type="file" name="question_file" id="question_file" class="form-control" required>
+                                                    <input type="file" name="question_file" id="question_file" class="form-control">
                                                 </div>
                                         <?php break;
                                         }
