@@ -133,6 +133,11 @@ if ($conn) {
             } else {
                 echo $conn->error;
             }
+        } else if ($_POST['type'] == "rank") {
+            // Get all answers
+            
+            var_dump($_POST);
+            die();
         }
     }
 }
