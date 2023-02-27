@@ -218,12 +218,8 @@ include('../../logout.php');
                                     <?php elseif ($questionnaire['question_type'] == "rank" && $questions_res) : ?>
                                         <?php include_once("rank.php"); ?>
                                     <?php elseif ($questionnaire['question_type'] == "range" && $questions_res) : ?>
-                                        <?php while ($row = $questions_res->fetch_assoc()) : ?>
-                                            <tr>
-                                                <?php if ($questionnaire['question_type'] == "rank") : ?>
-                                                <?php endif; ?>
-                                            </tr>
-                                        <?php endwhile; ?>
+                                        <?php $range = $questionnaire['selection_range']; ?>
+                                        <?php include_once("range.php"); ?>
                                     <?php endif ?>
                                 </div>
                             </div>
