@@ -11,13 +11,13 @@
                 <?php $count = 1; ?>
                 <?php foreach ($allQuestions as $question) : ?>
                     <?php $id = $question['id']; ?>
-                    <?php $name = "question" . $count . "group" . $i; ?>
+                    <?php $name = "question" . $count; ?>
                     <?php if ($question['group'] == $i) : ?>
                         <tr>
                             <th scope="row">
                                 <input type="number" name="<?php echo $name; ?>" style="width: 48px" min="1" max="9" required>
                             </th>
-                            <td><?php echo $question['question_text']; ?></td>
+                            <td><?php echo $count . ". " . $question['question_text']; ?></td>
                         </tr>
                     <?php endif; ?>
                     <?php $count++; ?>

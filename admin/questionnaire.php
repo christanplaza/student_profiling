@@ -122,6 +122,7 @@ include('../logout.php');
                                                 <th>Question</th>
                                                 <?php if ($questionnaire['question_type'] == "rank") : ?>
                                                     <th>Group</th>
+                                                    <th>Intelligence Area</th>
                                                 <?php endif; ?>
                                                 <th>Actions</th>
                                             </tr>
@@ -153,6 +154,7 @@ include('../logout.php');
                                                             <?php echo $question['question_text']; ?>
                                                         </td>
                                                         <td><?php echo $question['group']; ?></td>
+                                                        <td><?php echo $question['intelligence_area']; ?></td>
                                                         <td>
                                                             <form action="/student_profiling/admin/questions/remove_question.php" method="POST">
                                                                 <input type="hidden" name="id" value="<?php echo $question['id']; ?>" />

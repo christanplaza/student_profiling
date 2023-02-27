@@ -49,11 +49,12 @@ if (isset($_GET['id'])) {
             if ($question_group_res) {
                 if (isset($_POST["submit"])) {
                     $question_text = $_POST['question_text'];
+                    $intelligence_area = $_POST['intelligence_area'];
 
                     while ($question_group = $question_group_res->fetch_assoc()) {
                         if ($_POST['question_group'] == $question_group['count']) {
                             $question_group_id = $question_group['id'];
-                            $insert = "INSERT into questions (question_group_id, question_text) VALUES ('$question_group_id', '$question_text')";
+                            $insert = "INSERT into questions (question_group_id, question_text, intelligence_area) VALUES ('$question_group_id', '$question_text', '$intelligence_area')";
 
                             if (mysqli_query($conn, $insert)) {
                                 header('location: /student_profiling/admin/questionnaire.php?id=' . $questionnaire_id);
@@ -171,6 +172,20 @@ include('../../logout.php');
                                                         <option value="1">1</option>
                                                         <option value="2">2</option>
                                                         <option value="3">3</option>
+                                                    </select>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="intelligence_area" class="form-label">Multiple Intelligence Area</label>
+                                                    <select name="intelligence_area" class="form-select" required>
+                                                        <option label="Choose an Intelligence Area"></option>
+                                                        <option value="kinesthetic">Bodily/Kinsethetic</option>
+                                                        <option value="existential">Existential</option>
+                                                        <option value="interpersonal">Interpersonal</option>
+                                                        <option value="logic">Logic</option>
+                                                        <option value="musical">Musical</option>
+                                                        <option value="naturalistic">Naturalistic</option>
+                                                        <option value="verbal">Verbal</option>
+                                                        <option value="visual">Visual</option>
                                                     </select>
                                                 </div>
                                             <?php break;
