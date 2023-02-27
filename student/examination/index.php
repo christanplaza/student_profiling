@@ -42,7 +42,97 @@ if ($conn) {
     if (isset($_POST['submit'])) {
         if ($_POST['type'] == "choices") {
             // Compile all answers
-            $answerCount = mysqli_num_rows($questions_res);
+            $questionCount = mysqli_num_rows($questions_res);
+
+            $totalScore = 0;
+            $user_answers = array();
+
+            for ($i = 1; $i <= $questionCount; $i++) {
+                array_push($user_answers, $_POST["question" . $i . "_answer"]);
+            }
+
+            $index = 0;
+            while ($question = $questions_res->fetch_assoc()) {
+                if ($question['correct_answer'] == $user_answers[$index]) {
+                    var_dump($question['correct_answer'], $user_answers[$index]);
+                    $totalScore++;
+                }
+
+                $index++;
+            }
+
+            echo $totalScore;
+
+            $iq = "";
+
+            // Evaluation of Score
+
+            switch ($totalScore) {
+                case 6:
+                    $iq = "77";
+                    break;
+                case 7:
+                    $iq = "79";
+                    break;
+                case 8:
+                    $iq = "84";
+                    break;
+                case 9:
+                    $iq = "88";
+                    break;
+                case 10:
+                    $iq = "92";
+                    break;
+                case 11:
+                    $iq = "94";
+                    break;
+                case 12:
+                    $iq = "98";
+                    break;
+                case 13:
+                    $iq = "101";
+                    break;
+                case 14:
+                    $iq = "104";
+                    break;
+                case 15:
+                    $iq = "108";
+                    break;
+                case 16:
+                    $iq = "111";
+                    break;
+                case 17:
+                    $iq = "114";
+                    break;
+                case 18:
+                    $iq = "119";
+                    break;
+                case 19:
+                    $iq = "123";
+                    break;
+                case 20:
+                    $iq = "125";
+                    break;
+                case 21:
+                    $iq = "132";
+                    break;
+                default:
+                    if ($totalScore <= 5) {
+                        $iq = "<= 73";
+                    } else if ($totalScore >= 22) {
+                        $iq = ">= 139";
+                    }
+                    break;
+            }
+
+            $result = "Your IQ According to this assessment is: " . $iq;
+
+            $sql = "UPDATE evaluation SET is_complete = '1', validity = '1', evaluation_result = '$result' WHERE id = '$evaluation_id'";
+            if (mysqli_query($conn, $sql)) {
+                header("location: /student_profiling/student/assessments.php");
+            } else {
+                echo $conn->error;
+            }
         }
     }
 }
@@ -99,34 +189,9 @@ include('../../logout.php');
                             <div class="row">
                                 <div class="col-12">
                                     <?php if ($questionnaire['question_type'] == "choices" && $questions_res) : ?>
-                                        <form method="POST">
-                                            <input type="hidden" value="choices" name="type" />
-                                            <?php $count = 1; ?>
-                                            <?php while ($row = $questions_res->fetch_assoc()) : ?>
-                                                <div class="mb-4">
-                                                    <p><?php echo $count; ?>. <?php echo $row['question_text']; ?></p>
-                                                    <?php if (isset($row['question_image'])) : ?>
-                                                        <img src="data:image/jpg;charset=utf8;base64,<?php echo base64_encode($row['question_image']); ?>" class="w-100" />
-                                                    <?php endif; ?>
-                                                </div>
-                                                <input type="hidden" value="<?php echo $row['id']; ?>" name="question<?php echo $count; ?>_id" />
-                                                <div class="mb-4">
-                                                    <label class="form-label" for="question<?php echo $count; ?>">Your Answer</label>
-                                                    <select class="form-control" name="question<?php echo $count; ?>_answer" required>
-                                                        <option selected disabled>Choose your Answer</option>
-                                                        <?php for ($i = 0; $i < 8; $i++) : ?>
-                                                            <option value="<?php echo $letters[$i]; ?>"><?php echo $letters[$i]; ?></option>
-                                                        <?php endfor; ?>
-                                                    </select>
-                                                </div>
-                                                <?php $count++; ?>
-                                            <?php endwhile; ?>
-                                            <button type="submit" class="btn btn-success float-end" name="submit">Submit</button>
-                                        </form>
+                                        <?php include_once("choices.php"); ?>
                                     <?php elseif ($questionnaire['question_type'] == "rank" && $questions_res) : ?>
-                                        <?php foreach ($allQuestions as $question) : ?>
-
-                                        <?php endforeach; ?>
+                                        <?php include_once("rank.php"); ?>
                                     <?php elseif ($questionnaire['question_type'] == "range" && $questions_res) : ?>
                                         <?php while ($row = $questions_res->fetch_assoc()) : ?>
                                             <tr>
