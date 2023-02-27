@@ -158,6 +158,60 @@ if ($conn) {
             } else {
                 echo $conn->error;
             }
+        } else if ($_POST['type'] == "range") {
+            var_dump($_POST);
+
+            $c = ["1", "7", "13", "15", "17"];
+            $o = ["2", "6", "9", "11", "12", "16", "18", "20"];
+            $r = ["3", "5", "10", "14", "19"];
+            $e = ["4", "8"];
+
+            $questionCount = mysqli_num_rows($questions_res);
+
+            $c_total = 0;
+            $o_total = 0;
+            $r_total = 0;
+            $e_total = 0;
+
+            for ($i = 1; $i <= $questionCount; $i++) {
+                echo ($_POST["question" . $i . "_answer"]);
+                // array_push($user_answers, $_POST["question" . $i . "_answer"]);
+                if (in_array($i, $c)) {
+                    $c_total += (int)$_POST["question" . $i . "_answer"];
+                } else if (in_array($i, $o)) {
+                    $o_total += (int)$_POST["question" . $i . "_answer"];
+                } else if (in_array($i, $r)) {
+                    $r_total += (int)$_POST["question" . $i . "_answer"];
+                } else if (in_array($i, $e)) {
+                    $e_total += (int)$_POST["question" . $i . "_answer"];
+                }
+            }
+
+            var_dump($c_total, $o_total, $r_total, $e_total);
+
+            $final_arp_score = ($c_total + $o_total + $r_total + $e_total) * 2;
+
+            $score = "";
+            if ($final_arp_score <= 59) {
+                $score = "Very Low";
+            } else if ($final_arp_score >= 60 && $final_arp_score <= 94) {
+                $score = "Low";
+            } else if ($final_arp_score >= 95 && $final_arp_score <= 134) {
+                $score = "Medium";
+            } else if ($final_arp_score >= 135 && $final_arp_score <= 165) {
+                $score = "High";
+            } else if ($final_arp_score >= 166 && $final_arp_score <= 200) {
+                $score = "Very High";
+            }
+
+            $eval = "Your Adversity Response Profile is: " . $score;
+
+            $sql = "UPDATE evaluation SET is_complete = '1', validity = '1', evaluation_result = '$eval' WHERE id = '$evaluation_id'";
+            if (mysqli_query($conn, $sql)) {
+                header("location: /student_profiling/student/assessments.php");
+            } else {
+                echo $conn->error;
+            }
         }
     }
 }
