@@ -11,8 +11,8 @@
             <div class="mx-4">
                 <?php for ($i = 1; $i <= $range; $i++) : ?>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="question<?php echo $count; ?>_answer" id="question<?php echo $i; ?>_answer" value="<?php echo $i; ?>" required>
-                        <label class="form-check-label" for="question<?php echo $i; ?>_answer"><?php echo $i; ?></label>
+                        <input style="cursor: pointer;" class="form-check-input" type="radio" name="question<?php echo $count; ?>_answer" id="question<?php echo $count; ?>_answer<?php echo $i; ?>" value="<?php echo $i; ?>" required>
+                        <label style="cursor: pointer;" class="form-check-label " for="question<?php echo $count; ?>_answer<?php echo $i; ?>"><?php echo $i; ?></label>
                     </div>
                 <?php endfor; ?>
             </div>

@@ -192,6 +192,7 @@ if ($conn) {
             $final_arp_score = ($c_total + $o_total + $r_total + $e_total) * 2;
 
             $score = "";
+
             if ($final_arp_score <= 59) {
                 $score = "Very Low";
             } else if ($final_arp_score >= 60 && $final_arp_score <= 94) {

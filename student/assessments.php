@@ -3,9 +3,26 @@ session_start();
 $conn = mysqli_connect('localhost', 'root', '', 'student_profiling');
 
 if ($conn) {
+    $student_id = $_COOKIE['id'];
     $sql = "SELECT * FROM questionnaire";
 
     $questionnaires_res = mysqli_query($conn, $sql);
+
+    $sql = "SELECT * FROM evaluation WHERE student_id = '$student_id'";
+    $evaluations_res = mysqli_query($conn, $sql);
+
+    $eval_questionnaires = array();
+
+    while ($eval = $evaluations_res->fetch_assoc()) {
+        array_push($eval_questionnaires, $eval['questionnaire_id']);
+    }
+
+    $questionnaires = array();
+    while ($questionnaire = $questionnaires_res->fetch_assoc()) {
+        if (!in_array($questionnaire['id'], $eval_questionnaires)) {
+            array_push($questionnaires, $questionnaire);
+        }
+    }
 
     if (isset($_POST['submit']) && isset($_POST['id'])) {
         $student_id = $_COOKIE['id'];
@@ -76,7 +93,7 @@ include('../logout.php');
                         <div class="card-body">
                             <div class="display-6 mb-5">Assessments</div>
                             <div class="row">
-                                <?php while ($questionnaire = $questionnaires_res->fetch_assoc()) : ?>
+                                <?php foreach ($questionnaires as $questionnaire) : ?>
                                     <div class="col-6">
                                         <div class="card mb-4">
                                             <div class="card-header">
@@ -93,7 +110,7 @@ include('../logout.php');
                                             </div>
                                         </div>
                                     </div>
-                                <?php endwhile; ?>
+                                <?php endforeach; ?>
                             </div>
                         </div>
                     </div>
