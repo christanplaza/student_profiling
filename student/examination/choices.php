@@ -12,7 +12,7 @@
         <div class="mb-4">
             <label class="form-label" for="question<?php echo $count; ?>">Your Answer</label>
             <select class="form-control" name="question<?php echo $count; ?>_answer" required>
-                <option label="Choose your Answer">Choose Your Answer</option>
+                <option label="Choose your Answer"></option>
                 <?php for ($i = 0; $i < 8; $i++) : ?>
                     <option value="<?php echo $letters[$i]; ?>"><?php echo $letters[$i]; ?></option>
                 <?php endfor; ?>

@@ -64,7 +64,6 @@ include('../logout.php');
                             <div class="display-6">Faculty Management</div>
                             <div class="row mt-4">
                                 <div class="col-12">
-
                                     <table class="table table-striped align-middle">
                                         <thead>
                                             <tr class="table-primary">

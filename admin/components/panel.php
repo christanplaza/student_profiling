@@ -14,6 +14,11 @@
                     Questionnaire Management
                 </a>
             </div>
+            <div class="col-12 mb-2">
+                <a href="/student_profiling/admin/masterlist.php" class="btn btn-primary btn-lg w-100">
+                    Masterlist
+                </a>
+            </div>
             <div class="col-12">
                 <a href="/student_profiling/admin/admin_logs.php" class="btn btn-primary btn-lg w-100">
                     Admin Logs

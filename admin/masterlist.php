@@ -1,31 +1,16 @@
 <?php
 session_start();
 $conn = mysqli_connect('localhost', 'root', '', 'student_profiling');
-if (isset($_GET['id'])) {
-    if ($conn) {
-        $id = $_GET['id'];
-        $sql = "SELECT * FROM users WHERE id = '$id' AND role = 'faculty'";
 
-        $user_res = mysqli_query($conn, $sql);
-        $user = mysqli_fetch_assoc($user_res);
-    } else {
-        echo "Couldn't connect to database.";
-    }
-} else if (isset($_POST['id'])) {
-    if ($conn) {
-        $id = $_POST['id'];
-        $sql = "DELETE FROM users WHERE id = '$id'";
+if ($conn) {
+    $sql = "SELECT * FROM users WHERE role = 'student' ORDER BY name";
 
-        mysqli_query($conn, $sql);
-        header('location: /student_profiling/admin/faculty_management.php');
-    } else {
-        echo "Couldn't connect to database.";
-    }
+    $student_res = mysqli_query($conn, $sql);
 } else {
-    header('location: /student_profiling/admin/faculty_management.php');
+    echo "Couldn't connect to database.";
 }
-include('../logout.php');
 
+include('../logout.php');
 ?>
 
 <!DOCTYPE html>
@@ -75,30 +60,36 @@ include('../logout.php');
                 </div>
                 <div class="col-8">
                     <div class="card shadow">
-                        <div class="card-header bg-secondary-subtle">Faculty Profile</div>
                         <div class="card-body">
-                            <table class="table">
-                                <tr>
-                                    <td>Name</td>
-                                    <td><?php echo $user['name']; ?></td>
-                                </tr>
-                                <tr>
-                                    <td>Username</td>
-                                    <td><?php echo $user['username']; ?></td>
-                                </tr>
-                                <tr>
-                                    <td>Age</td>
-                                    <td><?php echo $user['age']; ?></td>
-                                </tr>
-                                <tr>
-                                    <td>Gender</td>
-                                    <td><?php echo $user['gender']; ?></td>
-                                </tr>
-                                <tr>
-                                    <td>Address</td>
-                                    <td><?php echo $user['address']; ?></td>
-                                </tr>
-                            </table>
+                            <div class="display-6">Masterlist</div>
+                            <div class="row mt-4">
+                                <div class="col-12">
+                                    <table class="table table-striped align-middle">
+                                        <thead>
+                                            <tr class="table-primary">
+                                                <th>Name</th>
+                                                <th>Username</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php while ($row = $student_res->fetch_assoc()) : ?>
+                                                <tr>
+                                                    <td><?php echo $row['name']; ?></td>
+                                                    <td><?php echo $row['username']; ?></td>
+                                                    <td class="d-flex justify-content-evenly">
+                                                        <a href="/student_profiling/admin/student.php?id=<?php echo $row['id']; ?>" class="btn btn-primary">View Details</a>
+                                                        <form action="/student_profiling/admin/student.php?" method="POST">
+                                                            <input type="hidden" name="id" id="id" value="<?php echo $row['id']; ?>" />
+                                                            <button type="submit" class="btn btn-danger">Delete User</button>
+                                                        </form>
+                                                    </td>
+                                                </tr>
+                                            <?php endwhile; ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
