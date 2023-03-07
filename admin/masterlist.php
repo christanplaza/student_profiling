@@ -81,7 +81,7 @@ include('../logout.php');
                                                         <a href="/student_profiling/admin/student.php?id=<?php echo $row['id']; ?>" class="btn btn-primary">View Details</a>
                                                         <form action="/student_profiling/admin/student.php?" method="POST">
                                                             <input type="hidden" name="id" id="id" value="<?php echo $row['id']; ?>" />
-                                                            <button type="submit" class="btn btn-danger">Delete User</button>
+                                                            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this user?')">Delete User</button>
                                                         </form>
                                                     </td>
                                                 </tr>

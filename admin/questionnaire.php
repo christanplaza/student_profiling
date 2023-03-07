@@ -174,7 +174,7 @@ include('../logout.php');
                                                         <td>
                                                             <form action="/student_profiling/admin/questions/remove_question.php" method="POST">
                                                                 <input type="hidden" name="id" value="<?php echo $row['id']; ?>" />
-                                                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this questionnaire?')">Delete</button>
+                                                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this question?')">Delete</button>
                                                             </form>
                                                         </td>
                                                     </tr>
