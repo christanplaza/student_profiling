@@ -48,7 +48,7 @@ include('../logout.php');
 
 <head>
     <?php include_once "../components/header.php"; ?>
-    <title>Student Profiling | Admin</title>
+    <title>Student Profiling | Student</title>
 </head>
 
 <body>

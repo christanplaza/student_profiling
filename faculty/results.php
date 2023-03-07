@@ -1,5 +1,14 @@
 <?php
 session_start();
+$conn = mysqli_connect('localhost', 'root', '', 'student_profiling');
+
+if ($conn) {
+    $id = $_GET['id'];
+
+    $sql = "SELECT eval.*, q.name, q.description FROM evaluation as eval INNER JOIN questionnaire as q ON eval.questionnaire_id = q.id  WHERE eval.id = '$id'";
+    $eval_res = mysqli_query($conn, $sql);
+    $eval = $eval_res->fetch_assoc();
+}
 
 include('../logout.php');
 ?>
@@ -45,14 +54,23 @@ include('../logout.php');
 
     <div class="container">
         <div class="mt-5">
-            <div class="row">
-                <div class="col-4">
+            <div class="row justify-content-center">
+                <!-- <div class="col-4">
                     <?php include_once "components/panel.php" ?>
-                </div>
-                <div class="col-8">
+                </div> -->
+                <div class="col-6">
                     <div class="card shadow">
                         <div class="card-body">
-                            <div class="display-6">Homepage</div>
+                            <div class="display-6 mb-4">Results</div>
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Questionnaire Name</label>
+                                <input class="form-control" name="name" type="text" value="<?= $eval['name']; ?>" readonly>
+                            </div>
+                            <div class="mb-3">
+                                <label for="result" class="form-label">Evaluation Result</label>
+                                <textarea class="form-control" name="result" name="result" cols="30" rows="10" readonly style="resize: none;"><?= $eval['evaluation_result']; ?></textarea>
+                            </div>
+                            <a href="<?= $_SERVER['HTTP_REFERER'] ?>" class="btn btn-primary">Go back</a>
                         </div>
                     </div>
                 </div>

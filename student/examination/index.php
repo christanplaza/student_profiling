@@ -129,37 +129,72 @@ if ($conn) {
 
             $sql = "UPDATE evaluation SET is_complete = '1', validity = '1', evaluation_result = '$result' WHERE id = '$evaluation_id'";
             if (mysqli_query($conn, $sql)) {
-                header("location: /student_profiling/student/assessments.php");
+                header("location: /student_profiling/student/results.php?id=$evaluation_id");
             } else {
                 echo $conn->error;
             }
         } else if ($_POST['type'] == "rank") {
-            // Get all answers
+            $answers = array();
+            $hasError = false;
+            $error = "";
 
-            $kinesthetic = $_POST['question1'] + $_POST['question10'] + $_POST['question19'];
-            $existential = $_POST['question2'] + $_POST['question11'] + $_POST['question20'];
-            $interpersonal = $_POST['question3'] + $_POST['question4'] + $_POST['question12'] + $_POST['question13'] + $_POST['question21'] + $_POST['question22'];
-            $logic = $_POST['question5'] + $_POST['question14'] + $_POST['question23'];
-            $musical = $_POST['question6'] + $_POST['question15'] + $_POST['question24'];
-            $naturalistic = $_POST['question7'] + $_POST['question16'] + $_POST['question25'];
-            $verbal = $_POST['question8'] + $_POST['question17'] + $_POST['question26'];
-            $visual = $_POST['question9'] + $_POST['question18'] + $_POST['question27'];
-            $results = array("Bodily / Kinesthetic" => $kinesthetic, "Existential" => $existential, "Interpersonal" => $interpersonal, "Logic" => $logic, "Musical" => $musical, "Naturalistic" => $naturalistic, "Verbal" => $verbal, "Visual" => $visual);
-            asort($results);
-
-            $eval = "Your Multiple Intelligence is ranked as follows, from top to bottom. \n";
-            foreach ($results as $key => $result) {
-                $eval .= $key . ": " . $result . "\n";
+            // Verify answers
+            for ($i = 1; $i <= 27; $i++) {
+                array_push($answers, $_POST["question$i"]);
             }
 
-            $sql = "UPDATE evaluation SET is_complete = '1', validity = '1', evaluation_result = '$eval' WHERE id = '$evaluation_id'";
-            if (mysqli_query($conn, $sql)) {
-                header("location: /student_profiling/student/assessments.php");
+            // 1-9 only.
+            if (max($answers) > 9 || min($answers) < 1) {
+                $hasError = true;
+                $error = "Rank each group from 1-9 only.";
+            }
+
+            // Groups
+            for ($i = 0; $i < 3; $i++) {
+                // Questions
+                $num = $i * 9;
+                $group = array();
+                for ($j = 1; $j <= 9; $j++) {
+                    $idx = $num + $j;
+                    array_push($group, $_POST["question$idx"]);
+                }
+
+                $filtered = array_unique($group, SORT_NUMERIC);
+
+                if (count($group) != count($filtered)) {
+                    $hasError = true;
+                    $error = "Rank each group from 1-9 only. There should be no duplicates";
+                }
+            }
+
+            // Get all answers
+            if (!$hasError) {
+                $kinesthetic = $_POST['question1'] + $_POST['question10'] + $_POST['question19'];
+                $existential = $_POST['question2'] + $_POST['question11'] + $_POST['question20'];
+                $interpersonal = $_POST['question3'] + $_POST['question4'] + $_POST['question12'] + $_POST['question13'] + $_POST['question21'] + $_POST['question22'];
+                $logic = $_POST['question5'] + $_POST['question14'] + $_POST['question23'];
+                $musical = $_POST['question6'] + $_POST['question15'] + $_POST['question24'];
+                $naturalistic = $_POST['question7'] + $_POST['question16'] + $_POST['question25'];
+                $verbal = $_POST['question8'] + $_POST['question17'] + $_POST['question26'];
+                $visual = $_POST['question9'] + $_POST['question18'] + $_POST['question27'];
+                $results = array("Bodily / Kinesthetic" => $kinesthetic, "Existential" => $existential, "Interpersonal" => $interpersonal, "Logic" => $logic, "Musical" => $musical, "Naturalistic" => $naturalistic, "Verbal" => $verbal, "Visual" => $visual);
+                asort($results);
+
+                $eval = "Your Multiple Intelligence is ranked as follows, from top to bottom. \n";
+                foreach ($results as $key => $result) {
+                    $eval .= $key . ": " . $result . "\n";
+                }
+
+                $sql = "UPDATE evaluation SET is_complete = '1', validity = '1', evaluation_result = '$eval' WHERE id = '$evaluation_id'";
+                if (mysqli_query($conn, $sql)) {
+                    header("location: /student_profiling/student/results.php?id=$evaluation_id");
+                } else {
+                    echo $conn->error;
+                }
             } else {
-                echo $conn->error;
+                $_SESSION['error'] = $error;
             }
         } else if ($_POST['type'] == "range") {
-            var_dump($_POST);
 
             $c = ["1", "7", "13", "15", "17"];
             $o = ["2", "6", "9", "11", "12", "16", "18", "20"];
@@ -209,7 +244,7 @@ if ($conn) {
 
             $sql = "UPDATE evaluation SET is_complete = '1', validity = '1', evaluation_result = '$eval' WHERE id = '$evaluation_id'";
             if (mysqli_query($conn, $sql)) {
-                header("location: /student_profiling/student/assessments.php");
+                header("location: /student_profiling/student/results.php?id=$evaluation_id");
             } else {
                 echo $conn->error;
             }
@@ -225,7 +260,7 @@ include('../../logout.php');
 
 <head>
     <?php include_once "../../components/header.php"; ?>
-    <title>Student Profiling | Admin</title>
+    <title>Student Profiling | Student</title>
 </head>
 
 <body>
@@ -262,6 +297,14 @@ include('../../logout.php');
     <div class="container">
         <div class="mt-5">
             <div class="row">
+                <div class="col-12">
+                    <?php if (isset($_SESSION['error'])) : ?>
+                        <div class="alert alert-danger" role="alert">
+                            <?= $_SESSION['error']; ?>
+                        </div>
+                        <?php unset($_SESSION['error']); ?>
+                    <?php endif; ?>
+                </div>
                 <div class="col-12">
                     <div class="card shadow mb-5">
                         <div class="card-body">

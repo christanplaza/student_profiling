@@ -15,7 +15,7 @@
                     <?php if ($question['group'] == $i) : ?>
                         <tr>
                             <th scope="row">
-                                <input type="number" name="<?php echo $name; ?>" style="width: 48px" min="1" max="9" required>
+                                <input type="number" name="<?php echo $name; ?>" style="width: 48px" value="<?php echo isset($_POST[$name]) ? htmlspecialchars($_POST[$name], ENT_QUOTES) : ''; ?>" min="1" max="9" required>
                             </th>
                             <td><?php echo $count . ". " . $question['question_text']; ?></td>
                         </tr>
