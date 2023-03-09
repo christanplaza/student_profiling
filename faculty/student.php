@@ -18,13 +18,13 @@ if (isset($_GET['id'])) {
             $sql = "UPDATE evaluation SET validity = '0' WHERE id = '$eval_id'";
 
             mysqli_query($conn, $sql);
-            header("location: /student_profiling/faculty/student.php?id=$id");
+            header("location: $rootURL/faculty/student.php?id=$id");
         }
     } else {
         echo "Couldn't connect to database.";
     }
 } else {
-    header('location: /student_profiling/faculty/student_management.php');
+    header("location: $rootURL/faculty/student_management.php');
 }
 include('../logout.php');
 

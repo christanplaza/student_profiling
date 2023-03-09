@@ -130,7 +130,7 @@ if ($conn) {
 
             $sql = "UPDATE evaluation SET is_complete = '1', validity = '1', evaluation_result = '$result' WHERE id = '$evaluation_id'";
             if (mysqli_query($conn, $sql)) {
-                header("location: /student_profiling/student/results.php?id=$evaluation_id");
+                header("location: $rootURL/student/results.php?id=$evaluation_id");
             } else {
                 echo $conn->error;
             }
@@ -188,7 +188,7 @@ if ($conn) {
 
                 $sql = "UPDATE evaluation SET is_complete = '1', validity = '1', evaluation_result = '$eval' WHERE id = '$evaluation_id'";
                 if (mysqli_query($conn, $sql)) {
-                    header("location: /student_profiling/student/results.php?id=$evaluation_id");
+                    header("location: $rootURL/student/results.php?id=$evaluation_id");
                 } else {
                     echo $conn->error;
                 }
@@ -245,7 +245,7 @@ if ($conn) {
 
             $sql = "UPDATE evaluation SET is_complete = '1', validity = '1', evaluation_result = '$eval' WHERE id = '$evaluation_id'";
             if (mysqli_query($conn, $sql)) {
-                header("location: /student_profiling/student/results.php?id=$evaluation_id");
+                header("location: $rootURL/student/results.php?id=$evaluation_id");
             } else {
                 echo $conn->error;
             }

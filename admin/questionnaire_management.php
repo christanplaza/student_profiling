@@ -13,7 +13,7 @@ if ($conn) {
         $sql = "DELETE FROM questionnaire WHERE id = '$id'";
 
         if (mysqli_query($conn, $sql)) {
-            header("location: /student_profiling/admin/questionnaire_management.php");
+            header("location: $rootURL/admin/questionnaire_management.php");
         }
     }
 } else {

@@ -29,11 +29,11 @@ if (isset($_POST['submit'])) {
                         setcookie("logged_in", true, time() + (86400), "/"); // 86400 = 1 day
 
                         if ($role == "admin") {
-                            header('location: /student_profiling/admin/');
+                            header("location: $rootURL/admin/");
                         } else if ($role == "faculty") {
-                            header('location: /student_profiling/faculty/');
+                            header("location: $rootURL/faculty/");
                         } else {
-                            header('location: /student_profiling/student/');
+                            header("location: $rootURL/student/");
                         }
                     } else {
                         $result = array("status" => "failed", "message" => "Login failed, try again.");

@@ -38,7 +38,7 @@ if (isset($_GET['id'])) {
         echo "Couldn't connect to database.";
     }
 } else {
-    header("location: /student_profiling/admin/");
+    header("location: $rootURL/admin/");
 }
 include('../logout.php');
 ?>

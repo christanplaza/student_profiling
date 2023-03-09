@@ -30,7 +30,7 @@ if ($conn) {
                 $sql = "INSERT INTO question_group (questionnaire_id) VALUES ('$questionnaire_id')";
 
                 if (mysqli_query($conn, $sql)) {
-                    header('location: /student_profiling/admin/questionnaire_management.php');
+                    header("location: $rootURL/admin/questionnaire_management.php');
                 } else {
                     echo $conn->error;
                 }
@@ -42,9 +42,9 @@ if ($conn) {
                     $sql = "INSERT INTO question_group (questionnaire_id, count) VALUES ('$questionnaire_id', '$count')";
                     mysqli_query($conn, $sql);
                 }
-                header('location: /student_profiling/admin/questionnaire_management.php');
+                header("location: $rootURL/admin/questionnaire_management.php');
             }
-            header('location: /student_profiling/admin/questionnaire_management.php');
+            header("location: $rootURL/admin/questionnaire_management.php');
         } else {
             echo $conn->error;
         }

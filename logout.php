@@ -5,5 +5,5 @@ if (isset($_POST['logout'])) {
     setcookie('role', null, -1);
     setcookie('name', null, -1);
     setcookie('logged_in', null, -1);
-    header('location: /student_profiling/');
+    header("location: $rootURL/");
 }

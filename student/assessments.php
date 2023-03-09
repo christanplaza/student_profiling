@@ -32,7 +32,7 @@ if ($conn) {
 
         if (mysqli_query($conn, $sql)) {
             $eval_id = $conn->insert_id;
-            header("location: /student_profiling/student/examination/index.php?questionnaire=$questionnaire_id&eval=$eval_id");
+            header("location: $rootURL/student/examination/index.php?questionnaire=$questionnaire_id&eval=$eval_id");
         } else {
             echo "Error: " . $conn->error;
         }
