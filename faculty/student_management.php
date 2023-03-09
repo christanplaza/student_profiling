@@ -84,7 +84,7 @@ include('../logout.php');
                                                     </td>
                                                     <td class="d-flex justify-content-evenly">
                                                         <a href="<?= $rootURL ?>/faculty/student.php?id=<?php echo $row['id']; ?>" class="btn btn-primary">View Details</a>
-                                                        <form action="/student_profiling/faculty/student.php?" method="POST">
+                                                        <form action="$rootURL/faculty/student.php?" method="POST">
                                                             <input type="hidden" name="id" id="id" value="<?php echo $row['id']; ?>" />
                                                             <button type="submit" class="btn btn-danger">Delete User</button>
                                                         </form>
