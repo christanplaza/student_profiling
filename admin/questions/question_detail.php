@@ -1,8 +1,9 @@
 <?php
 session_start();
+include '../../../config.php';
 
 if (isset($_GET['id'])) {
-    $conn = mysqli_connect('localhost', 'root', '', 'student_profiling');
+    $conn = mysqli_connect($host, $username, $password, $database);
     $question_id = $_GET['id'];
     $questionnaire_type = $_GET['type'];
 

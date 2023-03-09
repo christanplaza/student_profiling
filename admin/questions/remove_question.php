@@ -1,4 +1,5 @@
 <?php
+include '../../../config.php';
 
 // Make sure we have received the id parameter via POST
 if (!isset($_POST['id'])) {

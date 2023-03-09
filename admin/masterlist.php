@@ -1,6 +1,7 @@
 <?php
 session_start();
-$conn = mysqli_connect('localhost', 'root', '', 'student_profiling');
+include '../../config.php';
+$conn = mysqli_connect($host, $username, $password, $database);
 
 if ($conn) {
     $sql = "SELECT * FROM users WHERE role = 'student' ORDER BY name";

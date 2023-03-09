@@ -1,7 +1,8 @@
 <?php
 session_start();
+include '../../config.php';
 if (isset($_GET['id'])) {
-    $conn = mysqli_connect('localhost', 'root', '', 'student_profiling');
+    $conn = mysqli_connect($host, $username, $password, $database);
     $id = $_GET['id'];
     if ($conn) {
         $sql = "SELECT * FROM questionnaire WHERE id = '$id'";

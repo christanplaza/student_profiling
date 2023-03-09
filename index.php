@@ -1,9 +1,10 @@
 <?php
+include '../config.php';
 session_start();
 
 if (isset($_POST['submit'])) {
     if (isset($_POST['username']) && isset($_POST['password'])) {
-        $conn = mysqli_connect('localhost', 'root', '', 'student_profiling');
+        $conn = mysqli_connect($host, $username, $password, $database);
 
         if ($conn) {
             $username = $_POST['username'];

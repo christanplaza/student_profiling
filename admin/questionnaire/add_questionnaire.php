@@ -1,7 +1,8 @@
 <?php
 session_start();
+include '../../../config.php';
 
-$conn = mysqli_connect('localhost', 'root', '', 'student_profiling');
+$conn = mysqli_connect($host, $username, $password, $database);
 
 if ($conn) {
     if (isset($_POST['questionnaire_type']) && isset($_POST['questionnaire_name']) && isset($_POST['questionnaire_desc']) && isset($_POST['questionnaire_instruction'])) {
