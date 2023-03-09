@@ -58,7 +58,7 @@ if (isset($_GET['id'])) {
                             $insert = "INSERT into questions (question_group_id, question_text, intelligence_area) VALUES ('$question_group_id', '$question_text', '$intelligence_area')";
 
                             if (mysqli_query($conn, $insert)) {
-                                header("location: $rootURL/admin/questionnaire.php?id='$questionnaire_id");
+                                header("location: $rootURL/admin/questionnaire.php?id=$questionnaire_id");
                             } else {
                                 echo $conn->error;
                             }
@@ -79,7 +79,7 @@ if (isset($_GET['id'])) {
                     $insert = "INSERT into questions (question_group_id, question_text, agree_text, disagree_text) VALUES ('$question_group_id', '$question_text', '$agree_text', '$disagree_text')";
 
                     if (mysqli_query($conn, $insert)) {
-                        header("location: $rootURL/admin/questionnaire.php?id='$questionnaire_id");
+                        header("location: $rootURL/admin/questionnaire.php?id=$questionnaire_id");
                     } else {
                         echo $conn->error;
                     }
