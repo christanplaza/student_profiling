@@ -24,7 +24,7 @@ if (isset($_GET['id'])) {
         echo "Couldn't connect to database.";
     }
 } else {
-    header("location: $rootURL/faculty/student_management.php');
+    header("location: $rootURL/faculty/student_management.php");
 }
 include('../logout.php');
 
