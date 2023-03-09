@@ -38,7 +38,7 @@ if (isset($_GET['id'])) {
                             $insert = "INSERT into questions (question_group_id, question_text, question_image, correct_answer) VALUES ('$question_group_id', '$question_text', '$imgContent', '$correct_answer')";
 
                             if (mysqli_query($conn, $insert)) {
-                                header("location: $rootURL/admin/questionnaire.php?id=' . $questionnaire_id");
+                                header("location: $rootURL/admin/questionnaire.php?id=$questionnaire_id");
                             } else {
                                 echo $conn->error;
                             }
