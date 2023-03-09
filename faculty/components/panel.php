@@ -5,12 +5,12 @@
                 <div class="display-6">Faculty Panel</div>
             </div>
             <div class="col-12 mb-2">
-                <a href="/student_profiling/faculty/student_management.php" class="btn btn-primary btn-lg w-100">
+                <a href="<?= $rootURL ?>/faculty/student_management.php" class="btn btn-primary btn-lg w-100">
                     Student Management
                 </a>
             </div>
             <div class="col-12">
-                <a href="/student_profiling/faculty/student_logs.php" class="btn btn-primary btn-lg w-100">
+                <a href="<?= $rootURL ?>/faculty/student_logs.php" class="btn btn-primary btn-lg w-100">
                     Student Logs
                 </a>
             </div>

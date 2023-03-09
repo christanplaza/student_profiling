@@ -137,7 +137,7 @@ include('../logout.php');
                                                             <?php endif ?>
                                                         </td>
                                                         <td class="d-flex justify-space-evenly">
-                                                            <a href="/student_profiling/faculty/results.php?id=<?= $eval['id'] ?>" class="btn btn-primary">View Results</a>
+                                                            <a href="<?= $rootURL ?>/faculty/results.php?id=<?= $eval['id'] ?>" class="btn btn-primary">View Results</a>
                                                             <?php if ($eval['validity'] == 1) : ?>
                                                                 <form action="/student_profiling/faculty/student.php?id=<?= $id ?>" method="post">
                                                                     <input type="hidden" name="eval_id" value="<?= $eval['id']; ?>">

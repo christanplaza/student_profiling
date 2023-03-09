@@ -111,7 +111,7 @@ include('../logout.php');
                             </p>
                             <div class="row mt-4">
                                 <div class="col-12 mb-4">
-                                    <a href="/student_profiling/admin/questions/add_question.php?id=<?php echo $id; ?>" class="float-end btn btn-success">Add Question</a>
+                                    <a href="<?= $rootURL ?>/admin/questions/add_question.php?id=<?php echo $id; ?>" class="float-end btn btn-success">Add Question</a>
                                 </div>
                                 <div class="col-12">
                                     <table class="table table-striped align-middle">
@@ -130,7 +130,7 @@ include('../logout.php');
                                                 <?php while ($row = $questions_res->fetch_assoc()) : ?>
                                                     <tr>
                                                         <td>
-                                                            <a href="/student_profiling/admin/questions/question_detail.php?id=<?php echo $row['id']; ?>&type=<?php echo $questionnaire['question_type']; ?>">
+                                                            <a href="<?= $rootURL ?>/admin/questions/question_detail.php?id=<?php echo $row['id']; ?>&type=<?php echo $questionnaire['question_type']; ?>">
                                                                 <?php echo $row['question_text']; ?>
                                                             </a>
                                                         </td>
@@ -165,7 +165,7 @@ include('../logout.php');
                                                 <?php while ($row = $questions_res->fetch_assoc()) : ?>
                                                     <tr>
                                                         <td>
-                                                            <a href="/student_profiling/admin/questions/question_detail.php?id=<?php echo $row['id']; ?>&type=<?php echo $questionnaire['question_type']; ?>">
+                                                            <a href="<?= $rootURL ?>/admin/questions/question_detail.php?id=<?php echo $row['id']; ?>&type=<?php echo $questionnaire['question_type']; ?>">
                                                                 <?php echo $row['question_text']; ?>
                                                             </a>
                                                         </td>

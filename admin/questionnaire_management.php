@@ -73,7 +73,7 @@ include('../logout.php');
                             <div class="display-6">Questionnaire Management</div>
                             <div class="row mt-4">
                                 <div class="col-12 mb-4">
-                                    <a href="/student_profiling/admin/questionnaire/add_questionnaire.php" class="float-end btn btn-success">Add Questionnaire</a>
+                                    <a href="<?= $rootURL ?>/admin/questionnaire/add_questionnaire.php" class="float-end btn btn-success">Add Questionnaire</a>
                                 </div>
                                 <div class="col-12">
                                     <table class="table table-striped align-middle">
@@ -88,7 +88,7 @@ include('../logout.php');
                                                 <tr>
                                                     <td><?php echo $row['name']; ?></td>
                                                     <td class="d-flex justify-content-evenly">
-                                                        <a href="/student_profiling/admin/questionnaire.php?id=<?php echo $row['id']; ?>" class="btn btn-primary">View Details</a>
+                                                        <a href="<?= $rootURL ?>/admin/questionnaire.php?id=<?php echo $row['id']; ?>" class="btn btn-primary">View Details</a>
                                                         <form method="POST">
                                                             <input type="hidden" name="id" value="<?php echo $row['id']; ?>" />
                                                             <button type="submit" name="delete" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this questionnaire?')">Delete</button>

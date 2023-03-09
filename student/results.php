@@ -71,7 +71,7 @@ include('../logout.php');
                                 <label for="result" class="form-label">Evaluation Result</label>
                                 <textarea class="form-control" name="result" name="result" cols="30" rows="10" readonly style="resize: none;"><?= $eval['evaluation_result']; ?></textarea>
                             </div>
-                            <a href="/student_profiling/student/assessments.php" class="btn btn-primary">Go back to Assessments</a>
+                            <a href="<?= $rootURL ?>/student/assessments.php" class="btn btn-primary">Go back to Assessments</a>
                         </div>
                     </div>
                 </div>
