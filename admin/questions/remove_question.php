@@ -7,7 +7,7 @@ if (!isset($_POST['id'])) {
 }
 
 // Establish a connection to the database
-$mysqli = new mysqli('localhost', 'root', '', 'student_profiling');
+$mysqli = new mysqli($host, $username, $password, $database);
 
 // Check for errors connecting to the database
 if ($mysqli->connect_errno) {
