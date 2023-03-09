@@ -149,7 +149,7 @@ include('../../logout.php');
                                             <label for="question_text" class="form-label">Question</label>
                                             <input type="text" name="question_text" id="question_text" class="form-control" required>
                                         </div>
-                                        <?php switch ($questionnaire['question_type']) {
+                                        <?php switch ($questionnaire['question_type']):
                                             case "range": ?>
                                                 <div class="row">
                                                     <div class="col-6">
@@ -205,7 +205,7 @@ include('../../logout.php');
                                                     </select>
                                                 </div>
                                         <?php break;
-                                        }
+                                        endswitch;
                                         ?>
                                         <input type="submit" name="submit" value="Add Question" class="btn btn-success">
                                     </form>
