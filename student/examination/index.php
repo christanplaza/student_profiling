@@ -239,7 +239,7 @@ if ($conn) {
                     } else if ($item >= 10 && $item <= 17) {
                         $text .= "Development Priority";
                     }
-                    $eval .= $key . ": " . $result . " ($text)\n";
+                    $eval .= $key . ": " . $item . " ($text)\n";
                 }
 
                 $sql = "UPDATE evaluation SET is_complete = '1', validity = '1', evaluation_result = '$eval' WHERE id = '$evaluation_id'";
