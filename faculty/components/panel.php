@@ -9,11 +9,11 @@
                     Student Management
                 </a>
             </div>
-            <div class="col-12">
+            <!-- <div class="col-12">
                 <a href="<?= $rootURL ?>/faculty/student_logs.php" class="btn btn-primary btn-lg w-100">
                     Student Logs
                 </a>
-            </div>
+            </div> -->
         </div>
     </div>
 </div>

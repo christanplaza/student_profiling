@@ -19,11 +19,11 @@
                     Masterlist
                 </a>
             </div>
-            <div class="col-12">
+            <!-- <div class="col-12">
                 <a href="<?= $rootURL ?>/admin/admin_logs.php" class="btn btn-primary btn-lg w-100">
                     Admin Logs
                 </a>
-            </div>
+            </div> -->
         </div>
     </div>
 </div>
