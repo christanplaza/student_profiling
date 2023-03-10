@@ -137,7 +137,8 @@ include('../logout.php');
                                                         <?php if ($questionnaire['question_type'] == "rank") : ?>
                                                             <td> Grouping thing </td>
                                                         <?php endif; ?>
-                                                        <td>
+                                                        <td class="d-flex justify-content-evenly">
+                                                            <a class="btn btn-sm btn-warning mr-4" href="<?= $rootURL; ?>/admin/questions/edit_question.php?id=<?php echo $row['id']; ?>&questionnaire=<?= $id; ?>">Edit</a>
                                                             <form action="<?= $rootURL; ?>/admin/questions/remove_question.php" method="POST">
                                                                 <input type="hidden" name="id" value="<?php echo $row['id']; ?>" />
                                                                 <button type="submit" class="btn btn-sm btn-danger">Delete</button>
@@ -153,7 +154,8 @@ include('../logout.php');
                                                         </td>
                                                         <td><?php echo $question['group']; ?></td>
                                                         <td><?php echo $question['intelligence_area']; ?></td>
-                                                        <td>
+                                                        <td class="d-flex justify-content-evenly">
+                                                            <a class="btn btn-sm btn-warning mr-4" href="<?= $rootURL; ?>/admin/questions/edit_question.php?id=<?php echo $question['id']; ?>&questionnaire=<?= $id; ?>">Edit</a>
                                                             <form action="<?= $rootURL; ?>/admin/questions/remove_question.php" method="POST">
                                                                 <input type="hidden" name="id" value="<?php echo $question['id']; ?>" />
                                                                 <button type="submit" class="btn btn-sm btn-danger">Delete</button>
@@ -172,7 +174,8 @@ include('../logout.php');
                                                         <?php if ($questionnaire['question_type'] == "rank") : ?>
                                                             <td> Grouping thing </td>
                                                         <?php endif; ?>
-                                                        <td>
+                                                        <td class="d-flex justify-content-evenly">
+                                                            <a class="btn btn-sm btn-warning mr-4" href="<?= $rootURL; ?>/admin/questions/edit_question.php?id=<?php echo $row['id']; ?>&questionnaire=<?= $id; ?>">Edit</a>
                                                             <form action="<?= $rootURL; ?>/admin/questions/remove_question.php" method="POST">
                                                                 <input type="hidden" name="id" value="<?php echo $row['id']; ?>" />
                                                                 <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this question?')">Delete</button>
