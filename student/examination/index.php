@@ -299,12 +299,12 @@ if ($conn) {
                 $eval .= "Ownership: $o_percentage% \n";
 
                 // Compute for Reach percentage
-                $o_percentage = $o_total / 25 * 100;
-                $eval .= "Control: $o_percentage% \n";
+                $r_percentage = $r_total / 25 * 100;
+                $eval .= "Reach: $r_percentage% \n";
 
                 // Compute for Endurance percentage
                 $e_percentage = $e_total / 10 * 100;
-                $eval .= "Ownership: $e_percentage% \n";
+                $eval .= "Endurance: $e_percentage% \n";
 
                 $sql = "UPDATE evaluation SET is_complete = '1', validity = '1', evaluation_result = '$eval' WHERE id = '$evaluation_id'";
                 if (mysqli_query($conn, $sql)) {
