@@ -180,7 +180,7 @@ if ($conn) {
                 $verbal = $_POST['question8'] + $_POST['question17'] + $_POST['question26'];
                 $visual = $_POST['question9'] + $_POST['question18'] + $_POST['question27'];
                 $results = array("Bodily / Kinesthetic" => $kinesthetic, "Existential" => $existential, "Interpersonal" => $interpersonal, "Intrapersonal" => $intrapersonal, "Logic" => $logic, "Musical" => $musical, "Naturalistic" => $naturalistic, "Verbal" => $verbal, "Visual" => $visual);
-                arsort($results);
+                asort($results);
 
                 $eval = "Your Multiple Intelligence is ranked as follows, from top to bottom. \n";
                 foreach ($results as $key => $result) {
@@ -198,53 +198,120 @@ if ($conn) {
             }
         } else if ($_POST['type'] == "range") {
 
-            $c = ["1", "7", "13", "15", "17"];
-            $o = ["2", "6", "9", "11", "12", "16", "18", "20"];
-            $r = ["3", "5", "10", "14", "19"];
-            $e = ["4", "8"];
+            if ($questionnaire['range_type'] == "eq") {
+                $self_awareness =       ["1", "6", "11", "16", "21", "26", "31", "36", "41", "46"];
+                $managing_emotions =    ["2", "7", "12", "17", "22", "27", "32", "37", "42", "47"];
+                $motivating_oneself =   ["3", "8", "13", "18", "23", "28", "33", "38", "43", "48"];
+                $empathy =              ["4", "9", "14", "19", "24", "29", "34", "39", "44", "49"];
+                $social_skill =         ["5", "10", "15", "20", "25", "30", "35", "40", "45", "50"];
 
-            $questionCount = mysqli_num_rows($questions_res);
+                $questionCount = mysqli_num_rows($questions_res);
 
-            $c_total = 0;
-            $o_total = 0;
-            $r_total = 0;
-            $e_total = 0;
+                $self_awareness_total = 0;
+                $managing_emotions_total = 0;
+                $motivating_oneself_total = 0;
+                $empathy_total = 0;
+                $social_skill_total = 0;
 
-            for ($i = 1; $i <= $questionCount; $i++) {
-                if (in_array($i, $c)) {
-                    $c_total += (int)$_POST["question" . $i . "_answer"];
-                } else if (in_array($i, $o)) {
-                    $o_total += (int)$_POST["question" . $i . "_answer"];
-                } else if (in_array($i, $r)) {
-                    $r_total += (int)$_POST["question" . $i . "_answer"];
-                } else if (in_array($i, $e)) {
-                    $e_total += (int)$_POST["question" . $i . "_answer"];
+                for ($i = 1; $i <= $questionCount; $i++) {
+                    if (in_array($i, $self_awareness)) {
+                        $self_awareness_total += (int)$_POST["question" . $i . "_answer"];
+                    } else if (in_array($i, $managing_emotions)) {
+                        $managing_emotions_total += (int)$_POST["question" . $i . "_answer"];
+                    } else if (in_array($i, $motivating_oneself)) {
+                        $motivating_oneself_total += (int)$_POST["question" . $i . "_answer"];
+                    } else if (in_array($i, $empathy)) {
+                        $empathy_total += (int)$_POST["question" . $i . "_answer"];
+                    } else if (in_array($i, $social_skill)) {
+                        $social_skill_total += (int)$_POST["question" . $i . "_answer"];
+                    }
                 }
-            }
 
-            $final_arp_score = ($c_total + $o_total + $r_total + $e_total) * 2;
+                $complete_array = array("Self Awareness" => $self_awareness_total, "Managing Emotions" => $managing_emotions_total, "Motivating Oneself" => $motivating_oneself_total, "Empathy" => $empathy_total, "Social Skills" => $social_skill_total);
 
-            $score = "";
+                $eval = "Your Emotional Quotient results are as follows: \n";
+                foreach ($complete_array as $key => $item) {
+                    $text = "";
+                    if ($item >= 35 && $item <= 50) {
+                        $text .= "Strength";
+                    } else if ($item >= 18 && $item <= 34) {
+                        $text .= "Needs Attention";
+                    } else if ($item >= 10 && $item <= 17) {
+                        $text .= "Development Priority";
+                    }
+                    $eval .= $key . ": " . $result . " ($text)\n";
+                }
 
-            if ($final_arp_score <= 59) {
-                $score = "Very Low";
-            } else if ($final_arp_score >= 60 && $final_arp_score <= 94) {
-                $score = "Low";
-            } else if ($final_arp_score >= 95 && $final_arp_score <= 134) {
-                $score = "Medium";
-            } else if ($final_arp_score >= 135 && $final_arp_score <= 165) {
-                $score = "High";
-            } else if ($final_arp_score >= 166 && $final_arp_score <= 200) {
-                $score = "Very High";
-            }
-
-            $eval = "Your Adversity Response Profile is: " . $score . " \n test";
-
-            $sql = "UPDATE evaluation SET is_complete = '1', validity = '1', evaluation_result = '$eval' WHERE id = '$evaluation_id'";
-            if (mysqli_query($conn, $sql)) {
-                header("location: $rootURL/student/result.php?id=$evaluation_id");
+                $sql = "UPDATE evaluation SET is_complete = '1', validity = '1', evaluation_result = '$eval' WHERE id = '$evaluation_id'";
+                if (mysqli_query($conn, $sql)) {
+                    header("location: $rootURL/student/result.php?id=$evaluation_id");
+                } else {
+                    echo $conn->error;
+                }
             } else {
-                echo $conn->error;
+                $c = ["1", "7", "13", "15", "17"];
+                $o = ["2", "6", "9", "11", "12", "16", "18", "20"];
+                $r = ["3", "5", "10", "14", "19"];
+                $e = ["4", "8"];
+
+                $questionCount = mysqli_num_rows($questions_res);
+
+                $c_total = 0;
+                $o_total = 0;
+                $r_total = 0;
+                $e_total = 0;
+
+                for ($i = 1; $i <= $questionCount; $i++) {
+                    if (in_array($i, $c)) {
+                        $c_total += (int)$_POST["question" . $i . "_answer"];
+                    } else if (in_array($i, $o)) {
+                        $o_total += (int)$_POST["question" . $i . "_answer"];
+                    } else if (in_array($i, $r)) {
+                        $r_total += (int)$_POST["question" . $i . "_answer"];
+                    } else if (in_array($i, $e)) {
+                        $e_total += (int)$_POST["question" . $i . "_answer"];
+                    }
+                }
+
+                $final_arp_score = ($c_total + $o_total + $r_total + $e_total) * 2;
+
+                $score = "";
+
+                if ($final_arp_score <= 59) {
+                    $score = "Very Low";
+                } else if ($final_arp_score >= 60 && $final_arp_score <= 94) {
+                    $score = "Low";
+                } else if ($final_arp_score >= 95 && $final_arp_score <= 134) {
+                    $score = "Medium";
+                } else if ($final_arp_score >= 135 && $final_arp_score <= 165) {
+                    $score = "High";
+                } else if ($final_arp_score >= 166 && $final_arp_score <= 200) {
+                    $score = "Very High";
+                }
+
+                $eval = "Your Adversity Response Profile is: " . $score . " \n";
+                // Compute for Control percentage
+                $c_percentage = $c_total / 25 * 100;
+                $eval .= "Control: $c_percentage% \n";
+
+                // Compute for Ownership percentage
+                $o_percentage = $o_total / 40 * 100;
+                $eval .= "Ownership: $o_percentage% \n";
+
+                // Compute for Reach percentage
+                $o_percentage = $o_total / 25 * 100;
+                $eval .= "Control: $o_percentage% \n";
+
+                // Compute for Endurance percentage
+                $e_percentage = $e_total / 10 * 100;
+                $eval .= "Ownership: $e_percentage% \n";
+
+                $sql = "UPDATE evaluation SET is_complete = '1', validity = '1', evaluation_result = '$eval' WHERE id = '$evaluation_id'";
+                if (mysqli_query($conn, $sql)) {
+                    header("location: $rootURL/student/result.php?id=$evaluation_id");
+                } else {
+                    echo $conn->error;
+                }
             }
         }
     }

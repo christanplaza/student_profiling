@@ -70,6 +70,15 @@ include('../logout.php');
                     <?php include_once "components/panel.php" ?>
                 </div>
                 <div class="col-8">
+                    <?php if (isset($_SESSION['msg_type']) && isset($_SESSION['flash_message'])) : ?>
+                        <div class="alert alert-<?php echo $_SESSION["msg_type"]; ?> alert-dismissible fade show" role="alert">
+                            <?php echo $_SESSION["flash_message"]; ?>
+                        </div>
+                    <?php endif; ?>
+                    <?php
+                    unset($_SESSION['msg_type']);
+                    unset($_SESSION['flash_message']);
+                    ?>
                     <div class="card shadow">
                         <div class="card-header bg-secondary-subtle">
                             <div class="row">
@@ -96,6 +105,10 @@ include('../logout.php');
                                             <td><?php echo $user['age']; ?></td>
                                         </tr>
                                         <tr>
+                                            <td>Birthdate</td>
+                                            <td><?php echo $user['birthdate']; ?></td>
+                                        </tr>
+                                        <tr>
                                             <td>Gender</td>
                                             <td><?php echo $user['gender']; ?></td>
                                         </tr>
@@ -120,7 +133,7 @@ include('../logout.php');
                                             <td><?php echo $user['educ_elementary']; ?></td>
                                         </tr>
                                         <tr>
-                                            <td>Secondary Education</td>
+                                            <td>Senior Highschool Education</td>
                                             <td><?php echo $user['educ_secondary']; ?></td>
                                         </tr>
                                         <tr>

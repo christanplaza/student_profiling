@@ -95,12 +95,40 @@ include('../logout.php');
                                             <td><?php echo $user['age']; ?></td>
                                         </tr>
                                         <tr>
+                                            <td>Birthdate</td>
+                                            <td><?php echo $user['birthdate']; ?></td>
+                                        </tr>
+                                        <tr>
                                             <td>Gender</td>
                                             <td><?php echo $user['gender']; ?></td>
                                         </tr>
                                         <tr>
+                                            <td>Course</td>
+                                            <td><?php echo $user['course']; ?></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Year Level</td>
+                                            <td><?php echo $user['year']; ?></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Section</td>
+                                            <td><?php echo $user['section']; ?></td>
+                                        </tr>
+                                        <tr>
                                             <td>Address</td>
                                             <td><?php echo $user['address']; ?></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Elementary Education</td>
+                                            <td><?php echo $user['educ_elementary']; ?></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Senior Highschool Education</td>
+                                            <td><?php echo $user['educ_secondary']; ?></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Highschool Education</td>
+                                            <td><?php echo $user['educ_highschool']; ?></td>
                                         </tr>
                                     </table>
                                 </div>
