@@ -67,19 +67,20 @@ if (isset($_POST['submit'])) {
     <div class="container mt-5">
         <div class="row justify-content-center">
             <div class="col-4">
+                <?php if (isset($_SESSION['msg_type']) && isset($_SESSION['flash_message'])) : ?>
+                    <div class="alert alert-<?= $_SESSION['msg_type']; ?>" role="alert">
+                        <?= $_SESSION['flash_message']; ?>
+                    </div>
+
+                    <?php
+                    unset($_SESSION['msg_type']);
+                    unset($_SESSION['flash_message']);
+                    ?>
+                <?php endif; ?>
                 <div class="card">
                     <div class="card-body text-center form-signin">
                         <h1 class="h3 mb-3 fw-normal">User Login</h1>
 
-                        <?php if (isset($_SESSION['msg_type']) && isset($_SESSION['flash_message'])) : ?>
-                            <div class="alert alert-<?php echo $_SESSION["msg_type"]; ?> alert-dismissible fade show" role="alert">
-                                <?php echo $_SESSION["flash_message"]; ?>
-                            </div>
-                        <?php endif; ?>
-                        <?php
-                        unset($_SESSION['msg_type']);
-                        unset($_SESSION['flash_message']);
-                        ?>
                         <form method="POST">
                             <div class="form-floating mb-3">
                                 <input type="text" name="username" class="form-control" placeholder="JohnDoe27" required>

@@ -1,4 +1,5 @@
 <?php
+include '../../config.php';
 if (isset($_POST['logout'])) {
     setcookie('id', null, -1);
     setcookie('username', null, -1);
