@@ -56,10 +56,10 @@ include('../logout.php');
     <div class="container">
         <div class="mt-5">
             <div class="row justify-content-center">
-                <!-- <div class="col-4">
+                <div class="col-4">
                     <?php include_once "components/panel.php" ?>
-                </div> -->
-                <div class="col-6">
+                </div>
+                <div class="col-8">
                     <div class="card shadow">
                         <div class="card-body">
                             <div class="display-6 mb-4">Results</div>

@@ -141,7 +141,7 @@ include('../logout.php');
                                                             <a class="btn btn-sm btn-warning mr-4" href="<?= $rootURL; ?>/admin/questions/edit_question.php?id=<?php echo $row['id']; ?>&questionnaire=<?= $id; ?>">Edit</a>
                                                             <form action="<?= $rootURL; ?>/admin/questions/remove_question.php" method="POST">
                                                                 <input type="hidden" name="id" value="<?php echo $row['id']; ?>" />
-                                                                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this question?')">Delete</button>
                                                             </form>
                                                         </td>
                                                     </tr>
@@ -158,7 +158,7 @@ include('../logout.php');
                                                             <a class="btn btn-sm btn-warning mr-4" href="<?= $rootURL; ?>/admin/questions/edit_question.php?id=<?php echo $question['id']; ?>&questionnaire=<?= $id; ?>">Edit</a>
                                                             <form action="<?= $rootURL; ?>/admin/questions/remove_question.php" method="POST">
                                                                 <input type="hidden" name="id" value="<?php echo $question['id']; ?>" />
-                                                                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this question?')">Delete</button>
                                                             </form>
                                                         </td>
                                                     </tr>
