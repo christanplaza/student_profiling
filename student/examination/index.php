@@ -130,7 +130,7 @@ if ($conn) {
 
             $sql = "UPDATE evaluation SET is_complete = '1', validity = '1', evaluation_result = '$result' WHERE id = '$evaluation_id'";
             if (mysqli_query($conn, $sql)) {
-                header("location: $rootURL/student/results.php?id=$evaluation_id");
+                header("location: $rootURL/student/result.php?id=$evaluation_id");
             } else {
                 echo $conn->error;
             }
@@ -180,7 +180,7 @@ if ($conn) {
                 $verbal = $_POST['question8'] + $_POST['question17'] + $_POST['question26'];
                 $visual = $_POST['question9'] + $_POST['question18'] + $_POST['question27'];
                 $results = array("Bodily / Kinesthetic" => $kinesthetic, "Existential" => $existential, "Interpersonal" => $interpersonal, "Intrapersonal" => $intrapersonal, "Logic" => $logic, "Musical" => $musical, "Naturalistic" => $naturalistic, "Verbal" => $verbal, "Visual" => $visual);
-                asort($results);
+                arsort($results);
 
                 $eval = "Your Multiple Intelligence is ranked as follows, from top to bottom. \n";
                 foreach ($results as $key => $result) {
@@ -189,7 +189,7 @@ if ($conn) {
 
                 $sql = "UPDATE evaluation SET is_complete = '1', validity = '1', evaluation_result = '$eval' WHERE id = '$evaluation_id'";
                 if (mysqli_query($conn, $sql)) {
-                    header("location: $rootURL/student/results.php?id=$evaluation_id");
+                    header("location: $rootURL/student/result.php?id=$evaluation_id");
                 } else {
                     echo $conn->error;
                 }
@@ -211,8 +211,6 @@ if ($conn) {
             $e_total = 0;
 
             for ($i = 1; $i <= $questionCount; $i++) {
-                echo ($_POST["question" . $i . "_answer"]);
-                // array_push($user_answers, $_POST["question" . $i . "_answer"]);
                 if (in_array($i, $c)) {
                     $c_total += (int)$_POST["question" . $i . "_answer"];
                 } else if (in_array($i, $o)) {
@@ -223,8 +221,6 @@ if ($conn) {
                     $e_total += (int)$_POST["question" . $i . "_answer"];
                 }
             }
-
-            var_dump($c_total, $o_total, $r_total, $e_total);
 
             $final_arp_score = ($c_total + $o_total + $r_total + $e_total) * 2;
 
@@ -242,11 +238,11 @@ if ($conn) {
                 $score = "Very High";
             }
 
-            $eval = "Your Adversity Response Profile is: " . $score;
+            $eval = "Your Adversity Response Profile is: " . $score . " \n test";
 
             $sql = "UPDATE evaluation SET is_complete = '1', validity = '1', evaluation_result = '$eval' WHERE id = '$evaluation_id'";
             if (mysqli_query($conn, $sql)) {
-                header("location: $rootURL/student/results.php?id=$evaluation_id");
+                header("location: $rootURL/student/result.php?id=$evaluation_id");
             } else {
                 echo $conn->error;
             }

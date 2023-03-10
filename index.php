@@ -36,17 +36,24 @@ if (isset($_POST['submit'])) {
                             header("location: $rootURL/student/");
                         }
                     } else {
-                        $result = array("status" => "failed", "message" => "Login failed, try again.");
+                        $_SESSION['msg_type'] = 'danger';
+                        $_SESSION['flash_message'] = 'Login Failed';
                     }
                 } else {
-                    $result = array("status" => "failed", "message" => "User already exists.");
+                    $_SESSION['msg_type'] = 'danger';
+                    $_SESSION['flash_message'] = 'Login Failed';
                 }
+            } else {
+                $_SESSION['msg_type'] = 'danger';
+                $_SESSION['flash_message'] = 'Username/Password is Incorrect';
             }
         } else {
-            echo "Database connection failed.";
+            $_SESSION['msg_type'] = 'danger';
+            $_SESSION['flash_message'] = 'Database Connection Failed';
         }
     } else {
-        echo "All fields are required";
+        $_SESSION['msg_type'] = 'danger';
+        $_SESSION['flash_message'] = 'All Fields are required';
     }
 }
 ?>
@@ -68,15 +75,14 @@ if (isset($_POST['submit'])) {
         <div class="row justify-content-center">
             <div class="col-4">
                 <?php if (isset($_SESSION['msg_type']) && isset($_SESSION['flash_message'])) : ?>
-                    <div class="alert alert-<?= $_SESSION['msg_type']; ?>" role="alert">
-                        <?= $_SESSION['flash_message']; ?>
+                    <div class="alert alert-<?php echo $_SESSION["msg_type"]; ?> alert-dismissible fade show" role="alert">
+                        <?php echo $_SESSION["flash_message"]; ?>
                     </div>
-
-                    <?php
-                    unset($_SESSION['msg_type']);
-                    unset($_SESSION['flash_message']);
-                    ?>
                 <?php endif; ?>
+                <?php
+                unset($_SESSION['msg_type']);
+                unset($_SESSION['flash_message']);
+                ?>
                 <div class="card">
                     <div class="card-body text-center form-signin">
                         <h1 class="h3 mb-3 fw-normal">User Login</h1>

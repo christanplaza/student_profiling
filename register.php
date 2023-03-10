@@ -1,6 +1,7 @@
 <?php
 include '../config.php';
 session_start();
+$letters = ["A", "B", "C", "D", "E", "F", "G"];
 
 if (isset($_POST['submit'])) {
     if (isset($_POST['username']) && isset($_POST['name']) && isset($_POST['password-confirm']) && isset($_POST['password'])) {
@@ -10,23 +11,36 @@ if (isset($_POST['submit'])) {
             if ($conn) {
                 $name = $_POST['name'];
                 $username = $_POST['username'];
+                $course = $_POST['course'];
+                $year = $_POST['year'];
+                $section = $_POST['section'];
                 $password = md5($_POST['password']);
 
-                $sql = "INSERT INTO users (name, username, password, role) VALUES ('$name', '$username', '$password', 'student');";
+                $sql = "SELECT * FROM users WHERE username = '$username'";
+                $username_res = mysqli_query($conn, $sql);
 
-                if (mysqli_query($conn, $sql)) {
-                    $_SESSION['msg_type'] = 'success';
-                    $_SESSION['flash_message'] = 'Account Created';
-
-                    header("location: $rootURL/");
+                if (mysqli_num_rows($username_res) > 0) {
+                    $_SESSION['msg_type'] = 'danger';
+                    $_SESSION['flash_message'] = 'Username already exists';
                 } else {
-                    echo "Registration Failed.";
+                    $sql = "INSERT INTO users (name, username, password, role, course, year, section) VALUES ('$name', '$username', '$password', 'student', '$course', '$year', '$section');";
+
+                    if (mysqli_query($conn, $sql)) {
+                        $_SESSION['msg_type'] = 'success';
+                        $_SESSION['flash_message'] = 'Account Created';
+
+                        header("location: $rootURL/");
+                        exit();
+                    } else {
+                        echo "Registration Failed.";
+                    }
                 }
             } else {
                 echo "Database connection failed.";
             }
         } else {
-            echo "Password and Password Confirm must be the same.";
+            $_SESSION['msg_type'] = 'danger';
+            $_SESSION['flash_message'] = 'Password and Confirm Password do not match.';
         }
     } else {
         echo "All fields are required";
@@ -53,7 +67,6 @@ if (isset($_POST['submit'])) {
                 <div class="card">
                     <div class="card-body text-center form-signin">
                         <h1 class="h3 mb-3 fw-normal">Register User</h1>
-
                         <?php if (isset($_SESSION['msg_type']) && isset($_SESSION['flash_message'])) : ?>
                             <div class="alert alert-<?php echo $_SESSION["msg_type"]; ?> alert-dismissible fade show" role="alert">
                                 <?php echo $_SESSION["flash_message"]; ?>
@@ -79,6 +92,37 @@ if (isset($_POST['submit'])) {
                             <div class="form-floating mb-3">
                                 <input type="password" name="password-confirm" class="form-control" placeholder="Confirm Password" required>
                                 <label for="password-confirm">Confirm Password</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <select name="course" class="form-select" required>
+                                    <option label="Select your Course"></option>
+                                    <option value="electronics">Electronics Engineering</option>
+                                    <option value="mechanical">Mechanical Engineering</option>
+                                    <option value="computer">Computer Engineering</option>
+                                    <option value="electrical">Electrical Engineering</option>
+                                    <option value="mechatronics">Mechatronics Engineering</option>
+                                    <option value="instrumentation_control">Instrumentation and Control Engineering</option>
+                                </select>
+                                <label for="floatingInput">Course</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <select name="year" class="form-select" required>
+                                    <option label="Select your Year Level"></option>
+                                    <option value="1">1st Year</option>
+                                    <option value="2">2nd Year</option>
+                                    <option value="3">3rd Year</option>
+                                    <option value="4">4th Year</option>
+                                </select>
+                                <label for="floatingInput">Year Level</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <select name="section" class="form-select" required>
+                                    <option label="Select your Section"></option>
+                                    <?php for ($i = 0; $i < 7; $i++) : ?>
+                                        <option value="<?= $letters[$i]; ?>"><?= $letters[$i]; ?></option>
+                                    <?php endfor; ?>
+                                </select>
+                                <label for="floatingInput">Section</label>
                             </div>
                             <button class="w-100 btn btn-lg btn-primary" type="submit" name="submit">Create Account</button>
                             <div class="mt-3">

@@ -9,7 +9,7 @@ if ($conn) {
 
     $questionnaires_res = mysqli_query($conn, $sql);
 
-    $sql = "SELECT * FROM evaluation WHERE student_id = '$student_id'";
+    $sql = "SELECT * FROM evaluation WHERE student_id = '$student_id' AND validity = '1'";
     $evaluations_res = mysqli_query($conn, $sql);
 
     $eval_questionnaires = array();

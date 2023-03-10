@@ -2,16 +2,32 @@
 session_start();
 include '../../config.php';
 $conn = mysqli_connect($host, $username, $password, $database);
+if (isset($_COOKIE['id'])) {
+    if ($conn) {
+        $id = $_COOKIE['id'];
+        $sql = "SELECT * FROM users WHERE id = '$id' AND role = 'student'";
 
-if ($conn) {
-    $id = $_GET['id'];
+        $user_res = mysqli_query($conn, $sql);
+        $user = mysqli_fetch_assoc($user_res);
 
-    $sql = "SELECT eval.*, q.name, q.description FROM evaluation as eval INNER JOIN questionnaire as q ON eval.questionnaire_id = q.id  WHERE eval.id = '$id'";
-    $eval_res = mysqli_query($conn, $sql);
-    $eval = $eval_res->fetch_assoc();
+        $sql = "SELECT eval.*, q.name FROM evaluation as eval INNER JOIN questionnaire as q ON eval.questionnaire_id = q.id WHERE student_id = '$id' ORDER BY datetime_taken DESC";
+        $evaluations_res = mysqli_query($conn, $sql);
+
+        if (isset($_POST['eval_id'])) {
+            $eval_id = $_POST['eval_id'];
+            $sql = "UPDATE evaluation SET validity = '0' WHERE id = '$eval_id'";
+
+            mysqli_query($conn, $sql);
+            header("location: $rootURL/faculty/student.php?id=$id");
+        }
+    } else {
+        echo "Couldn't connect to database.";
+    }
+} else {
+    header("location: $rootURL/");
 }
-
 include('../logout.php');
+
 ?>
 
 <!DOCTYPE html>
@@ -55,23 +71,56 @@ include('../logout.php');
 
     <div class="container">
         <div class="mt-5">
-            <div class="row justify-content-center">
-                <!-- <div class="col-4">
+            <div class="row">
+                <div class="col-4">
                     <?php include_once "components/panel.php" ?>
-                </div> -->
-                <div class="col-6">
+                </div>
+                <div class="col-8">
                     <div class="card shadow">
                         <div class="card-body">
                             <div class="display-6 mb-4">Results</div>
-                            <div class="mb-3">
-                                <label for="name" class="form-label">Questionnaire Name</label>
-                                <input class="form-control" name="name" type="text" value="<?= $eval['name']; ?>" readonly>
+                            <div class="row">
+                                <div class="col-12">
+                                    <table class="table table-striped align-middle">
+                                        <thead>
+                                            <tr class="table-primary">
+                                                <th>Date Taken</th>
+                                                <th>Questionnaire</th>
+                                                <th>Validity</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php if (mysqli_num_rows($evaluations_res) > 0) : ?>
+                                                <?php while ($eval = $evaluations_res->fetch_assoc()) : ?>
+                                                    <tr class="align-center">
+                                                        <td><?php echo $eval['datetime_taken']; ?></td>
+                                                        <td><?php echo $eval['name']; ?></td>
+                                                        <td>
+                                                            <?php if ($eval['validity'] == 1) : ?>
+                                                                <h6 class="m-0">
+                                                                    <span class="badge bg-success">Valid</span>
+                                                                </h6>
+                                                            <?php else : ?>
+                                                                <h6 class="m-0">
+                                                                    <span class="badge bg-secondary">Invalid</span>
+                                                                </h6>
+                                                            <?php endif ?>
+                                                        </td>
+                                                        <td class="d-flex justify-space-evenly">
+                                                            <a href="<?= $rootURL ?>/student/result.php?id=<?= $eval['id'] ?>" class="btn btn-primary">View Results</a>
+                                                        </td>
+                                                    </tr>
+                                                <?php endwhile; ?>
+                                            <?php else : ?>
+                                                <tr>
+                                                    <td colspan="4" class="text-center">You have no Evaluations yet</td>
+                                                </tr>
+                                            <?php endif; ?>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
-                            <div class="mb-3">
-                                <label for="result" class="form-label">Evaluation Result</label>
-                                <textarea class="form-control" name="result" name="result" cols="30" rows="10" readonly style="resize: none;"><?= $eval['evaluation_result']; ?></textarea>
-                            </div>
-                            <a href="<?= $rootURL ?>/student/assessments.php" class="btn btn-primary">Go back to Assessments</a>
                         </div>
                     </div>
                 </div>

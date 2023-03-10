@@ -1,10 +1,11 @@
 <?php
 session_start();
 include '../../config.php';
+
 $conn = mysqli_connect($host, $username, $password, $database);
-if (isset($_GET['id'])) {
+if (isset($_COOKIE['id'])) {
     if ($conn) {
-        $id = $_GET['id'];
+        $id = $_COOKIE['id'];
         $sql = "SELECT * FROM users WHERE id = '$id' AND role = 'student'";
 
         $user_res = mysqli_query($conn, $sql);
@@ -15,16 +16,6 @@ if (isset($_GET['id'])) {
     } else {
         echo "Couldn't connect to database.";
     }
-} else if (isset($_POST['id'])) {
-    if ($conn) {
-        $id = $_POST['id'];
-        $sql = "DELETE FROM users WHERE id = '$id'";
-
-        mysqli_query($conn, $sql);
-        header("location: $rootURL/admin/student_management.php");
-    } else {
-        echo "Couldn't connect to database.";
-    }
 } else {
     header("location: $rootURL/admin/student_management.php");
 }
@@ -32,12 +23,13 @@ include('../logout.php');
 
 ?>
 
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <?php include_once "../components/header.php"; ?>
-    <title>Student Profiling | Admin</title>
+    <title>Student Profiling | Student</title>
 </head>
 
 <body>
@@ -79,7 +71,14 @@ include('../logout.php');
                 </div>
                 <div class="col-8">
                     <div class="card shadow">
-                        <div class="card-header bg-secondary-subtle">Student Profile</div>
+                        <div class="card-header bg-secondary-subtle">
+                            <div class="row">
+                                <div class="col-12">
+                                    Student Profile
+                                    <a href="<?= $rootURL ?>/student/edit_profile.php" class="btn btn-secondary btn-sm float-end">Edit Profile</a>
+                                </div>
+                            </div>
+                        </div>
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-12 mb-4">
@@ -101,54 +100,33 @@ include('../logout.php');
                                             <td><?php echo $user['gender']; ?></td>
                                         </tr>
                                         <tr>
+                                            <td>Course</td>
+                                            <td><?php echo $user['course']; ?></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Year Level</td>
+                                            <td><?php echo $user['year']; ?></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Section</td>
+                                            <td><?php echo $user['section']; ?></td>
+                                        </tr>
+                                        <tr>
                                             <td>Address</td>
                                             <td><?php echo $user['address']; ?></td>
                                         </tr>
-                                    </table>
-                                </div>
-                                <div class="col-12">
-                                    <div class="mb-4">
-                                        <h3>Evaluation</h3>
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <table class="table table-striped">
-                                        <thead>
-                                            <tr class="table-primary">
-                                                <th>Date Taken</th>
-                                                <th>Questionnaire</th>
-                                                <th>Validity</th>
-                                                <th>Actions</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php if (mysqli_num_rows($evaluations_res) > 0) : ?>
-                                                <?php while ($eval = $evaluations_res->fetch_assoc()) : ?>
-                                                    <tr>
-                                                        <td><?php echo $eval['datetime_taken']; ?></td>
-                                                        <td><?php echo $eval['name']; ?></td>
-                                                        <td>
-                                                            <?php if ($eval['validity'] == 1) : ?>
-                                                                <h6 class="m-0">
-                                                                    <span class="badge bg-success">Valid</span>
-                                                                </h6>
-                                                            <?php else : ?>
-                                                                <h6 class="m-0">
-                                                                    <span class="badge bg-secondary">Invalid</span>
-                                                                </h6>
-                                                            <?php endif ?>
-                                                        </td>
-                                                        <td>
-                                                            <a href="#" class="btn btn-warning">Invalidate</a>
-                                                        </td>
-                                                    </tr>
-                                                <?php endwhile; ?>
-                                            <?php else : ?>
-                                                <tr>
-                                                    <td colspan="3" class="text-center">Student has no Evaluations yet</td>
-                                                </tr>
-                                            <?php endif; ?>
-                                        </tbody>
+                                        <tr>
+                                            <td>Elementary Education</td>
+                                            <td><?php echo $user['educ_elementary']; ?></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Secondary Education</td>
+                                            <td><?php echo $user['educ_secondary']; ?></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Highschool Education</td>
+                                            <td><?php echo $user['educ_highschool']; ?></td>
+                                        </tr>
                                     </table>
                                 </div>
                             </div>
