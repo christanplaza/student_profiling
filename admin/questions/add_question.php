@@ -181,6 +181,7 @@ include('../../logout.php');
                                                         <option label="Choose an Intelligence Area"></option>
                                                         <option value="kinesthetic">Bodily/Kinsethetic</option>
                                                         <option value="existential">Existential</option>
+                                                        <option value="intrapersonal">Intrapersonal</option>
                                                         <option value="interpersonal">Interpersonal</option>
                                                         <option value="logic">Logic</option>
                                                         <option value="musical">Musical</option>

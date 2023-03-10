@@ -89,6 +89,7 @@ include('../logout.php');
                                                     <td><?php echo $row['name']; ?></td>
                                                     <td class="d-flex justify-content-evenly">
                                                         <a href="<?= $rootURL ?>/admin/questionnaire.php?id=<?php echo $row['id']; ?>" class="btn btn-primary">View Details</a>
+                                                        <a href="<?= $rootURL ?>/admin/edit_questionnaire.php?id=<?php echo $row['id']; ?>" class="btn btn-warning">Edit</a>
                                                         <form method="POST">
                                                             <input type="hidden" name="id" value="<?php echo $row['id']; ?>" />
                                                             <button type="submit" name="delete" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this questionnaire?')">Delete</button>

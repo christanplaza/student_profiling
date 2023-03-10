@@ -172,13 +172,14 @@ if ($conn) {
             if (!$hasError) {
                 $kinesthetic = $_POST['question1'] + $_POST['question10'] + $_POST['question19'];
                 $existential = $_POST['question2'] + $_POST['question11'] + $_POST['question20'];
-                $interpersonal = $_POST['question3'] + $_POST['question4'] + $_POST['question12'] + $_POST['question13'] + $_POST['question21'] + $_POST['question22'];
+                $intrapersonal = $_POST['question4'] + $_POST['question13'] + $_POST['question12'];
+                $interpersonal = $_POST['question3'] +  $_POST['question21'] + $_POST['question22'];
                 $logic = $_POST['question5'] + $_POST['question14'] + $_POST['question23'];
                 $musical = $_POST['question6'] + $_POST['question15'] + $_POST['question24'];
                 $naturalistic = $_POST['question7'] + $_POST['question16'] + $_POST['question25'];
                 $verbal = $_POST['question8'] + $_POST['question17'] + $_POST['question26'];
                 $visual = $_POST['question9'] + $_POST['question18'] + $_POST['question27'];
-                $results = array("Bodily / Kinesthetic" => $kinesthetic, "Existential" => $existential, "Interpersonal" => $interpersonal, "Logic" => $logic, "Musical" => $musical, "Naturalistic" => $naturalistic, "Verbal" => $verbal, "Visual" => $visual);
+                $results = array("Bodily / Kinesthetic" => $kinesthetic, "Existential" => $existential, "Interpersonal" => $interpersonal, "Intrapersonal" => $intrapersonal, "Logic" => $logic, "Musical" => $musical, "Naturalistic" => $naturalistic, "Verbal" => $verbal, "Visual" => $visual);
                 asort($results);
 
                 $eval = "Your Multiple Intelligence is ranked as follows, from top to bottom. \n";
