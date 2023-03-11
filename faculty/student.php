@@ -83,8 +83,12 @@ include('../logout.php');
                                 <div class="col-12 mb-4">
                                     <table class="table">
                                         <tr>
-                                            <td>Name</td>
-                                            <td><?php echo $user['name']; ?></td>
+                                            <td>First Name</td>
+                                            <td><?php echo $user['first_name']; ?></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Last Name</td>
+                                            <td><?php echo $user['last_name']; ?></td>
                                         </tr>
                                         <tr>
                                             <td>Username</td>
@@ -177,7 +181,7 @@ include('../logout.php');
                                                 <?php endwhile; ?>
                                             <?php else : ?>
                                                 <tr>
-                                                    <td colspan="3" class="text-center">Student has no Evaluations yet</td>
+                                                    <td colspan="4" class="text-center">Student has no Evaluations yet</td>
                                                 </tr>
                                             <?php endif; ?>
                                         </tbody>

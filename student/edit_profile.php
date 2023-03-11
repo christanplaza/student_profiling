@@ -14,7 +14,8 @@ if (isset($_COOKIE['id'])) {
 
 
         if (isset($_POST['submit'])) {
-            $name = $_POST['name'];
+            $first_name = $_POST['first_name'];
+            $last_name = $_POST['last_name'];
             $username = $_POST['username'];
             $age = $_POST['age'];
             $birthdate = $_POST['birthdate'];
@@ -33,7 +34,7 @@ if (isset($_COOKIE['id'])) {
 
                 if ($password == $confirm_password) {
                     $hashed = md5($password);
-                    $sql = "UPDATE users SET name = '$name', username = '$username', password = '$hashed', age = '$age', birthdate = '$birthdate', gender = '$gender', course = '$course', year = '$year', section = '$section', address = '$address', educ_elementary = '$educ_elementary', educ_secondary = '$educ_secondary', educ_highschool = '$educ_highschool' WHERE id = '$id'";
+                    $sql = "UPDATE users SET first_name = '$first_name', last_name = '$last_name', username = '$username', password = '$hashed', age = '$age', birthdate = '$birthdate', gender = '$gender', course = '$course', year = '$year', section = '$section', address = '$address', educ_elementary = '$educ_elementary', educ_secondary = '$educ_secondary', educ_highschool = '$educ_highschool' WHERE id = '$id'";
                     if (mysqli_query($conn, $sql)) {
                         $_SESSION['msg_type'] = 'success';
                         $_SESSION['flash_message'] = 'Account Updated';
@@ -47,7 +48,7 @@ if (isset($_COOKIE['id'])) {
                     $_SESSION['flash_message'] = 'Password and Confirm Password does not match';
                 }
             } else {
-                $sql = "UPDATE users SET name = '$name', username = '$username', age = '$age', birthdate = '$birthdate', gender = '$gender', course = '$course', year = '$year', section = '$section', address = '$address', educ_elementary = '$educ_elementary', educ_secondary = '$educ_secondary', educ_highschool = '$educ_highschool' WHERE id = '$id'";
+                $sql = "UPDATE users SET first_name = '$first_name', last_name = '$last_name', username = '$username', age = '$age', birthdate = '$birthdate', gender = '$gender', course = '$course', year = '$year', section = '$section', address = '$address', educ_elementary = '$educ_elementary', educ_secondary = '$educ_secondary', educ_highschool = '$educ_highschool' WHERE id = '$id'";
                 if (mysqli_query($conn, $sql)) {
                     $_SESSION['msg_type'] = 'success';
                     $_SESSION['flash_message'] = 'Account Updated';
@@ -142,9 +143,15 @@ include('../logout.php');
                                     <div class="col-12">
                                         <table class="table">
                                             <tr>
-                                                <td>Name</td>
+                                                <td>First Name</td>
                                                 <td>
-                                                    <input type="text" name="name" value="<?= $user['name']; ?>" class="form-control" required>
+                                                    <input type="text" name="first_name" value="<?= $user['first_name']; ?>" class="form-control" required>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Last Name</td>
+                                                <td>
+                                                    <input type="text" name="last_name" value="<?= $user['last_name']; ?>" class="form-control" required>
                                                 </td>
                                             </tr>
                                             <tr>

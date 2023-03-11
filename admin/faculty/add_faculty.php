@@ -2,12 +2,13 @@
 session_start();
 include '../../../config.php';
 if (isset($_POST['submit'])) {
-    if (isset($_POST['username']) && isset($_POST['name']) && isset($_POST['password-confirm']) && isset($_POST['password'])) {
+    if (isset($_POST['username']) && isset($_POST['first_name']) && isset($_POST['last_name']) && isset($_POST['password-confirm']) && isset($_POST['password'])) {
         $conn = mysqli_connect($host, $username, $password, $database);
 
         if ($_POST['password-confirm'] == $_POST['password']) {
             if ($conn) {
-                $name = $_POST['name'];
+                $first_name = $_POST['first_name'];
+                $last_name = $_POST['last_name'];
                 $username = $_POST['username'];
                 $password = md5($_POST['password']);
 
@@ -109,8 +110,12 @@ include('../../logout.php');
                                 <div class="col-12 mt-4">
                                     <form method="POST">
                                         <div class="form-floating mb-3">
-                                            <input type="text" name="name" class="form-control" placeholder="Juan Dela Cruz" value="<?= isset($_POST['name']) ? $_POST['name'] : ""; ?>" required>
-                                            <label for="floatingInput">Full Name</label>
+                                            <input type="text" name="first_name" class="form-control" placeholder="Juan" value="<?= isset($_POST['first_name']) ? $_POST['first_name'] : ""; ?>" required>
+                                            <label for="floatingInput">First Name</label>
+                                        </div>
+                                        <div class="form-floating mb-3">
+                                            <input type="text" name="last_name" class="form-control" placeholder="Dela Cruz" value="<?= isset($_POST['last_name']) ? $_POST['last_name'] : ""; ?>" required>
+                                            <label for="floatingInput">Last Name</label>
                                         </div>
                                         <div class="form-floating mb-3">
                                             <input type="text" name="username" class="form-control" placeholder="JohnDoe27" value="<?= isset($_POST['username']) ? $_POST['username'] : ""; ?>" required>

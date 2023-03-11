@@ -4,12 +4,13 @@ session_start();
 $letters = ["A", "B", "C", "D", "E", "F", "G"];
 
 if (isset($_POST['submit'])) {
-    if (isset($_POST['username']) && isset($_POST['name']) && isset($_POST['password-confirm']) && isset($_POST['password'])) {
+    if (isset($_POST['username']) && isset($_POST['first_name']) && isset($_POST['last_name']) && isset($_POST['password-confirm']) && isset($_POST['password'])) {
         $conn = mysqli_connect($host, $username, $password, $database);
 
         if ($_POST['password-confirm'] == $_POST['password']) {
             if ($conn) {
-                $name = $_POST['name'];
+                $first_name = $_POST['first_name'];
+                $last_name = $_POST['last_name'];
                 $username = $_POST['username'];
                 $course = $_POST['course'];
                 $year = $_POST['year'];
@@ -23,7 +24,7 @@ if (isset($_POST['submit'])) {
                     $_SESSION['msg_type'] = 'danger';
                     $_SESSION['flash_message'] = 'Username already exists';
                 } else {
-                    $sql = "INSERT INTO users (name, username, password, role, course, year, section) VALUES ('$name', '$username', '$password', 'student', '$course', '$year', '$section');";
+                    $sql = "INSERT INTO users (first_name, last_name, username, password, role, course, year, section) VALUES ('$first_name', '$last_name', '$username', '$password', 'student', '$course', '$year', '$section');";
 
                     if (mysqli_query($conn, $sql)) {
                         $_SESSION['msg_type'] = 'success';
@@ -78,8 +79,12 @@ if (isset($_POST['submit'])) {
                         ?>
                         <form method="POST">
                             <div class="form-floating mb-3">
-                                <input type="text" name="name" class="form-control" placeholder="Juan Dela Cruz" required>
-                                <label for="floatingInput">Full Name</label>
+                                <input type="text" name="first_name" class="form-control" placeholder="Juan" required>
+                                <label for="floatingInput">First Name</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="text" name="last_name" class="form-control" placeholder="Dela Cruz" required>
+                                <label for="floatingInput">Last Name</label>
                             </div>
                             <div class="form-floating mb-3">
                                 <input type="text" name="username" class="form-control" placeholder="JohnDoe27" required>

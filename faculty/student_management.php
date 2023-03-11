@@ -4,9 +4,17 @@ include '../../config.php';
 $conn = mysqli_connect($host, $username, $password, $database);
 
 if ($conn) {
-    $sql = "SELECT * FROM users WHERE role = 'student'";
+    if (isset($_GET['sort_by']) && isset($_GET['order'])) {
+        $sort_by = $_GET['sort_by'];
+        $order = $_GET['order'];
+        $sql = "SELECT * FROM users WHERE role = 'student' ORDER BY $sort_by $order";
 
-    $students_res = mysqli_query($conn, $sql);
+        $students_res = mysqli_query($conn, $sql);
+    } else {
+        $sql = "SELECT * FROM users WHERE role = 'student' ORDER BY last_name";
+
+        $students_res = mysqli_query($conn, $sql);
+    }
 } else {
     echo "Couldn't connect to database.";
 }
@@ -64,11 +72,18 @@ include('../logout.php');
                         <div class="card-body">
                             <div class="display-6">List of Students</div>
                             <div class="row mt-5">
+                                <div class="col-12 mb-2">
+                                    <a href="<?= $rootURL ?>/faculty/student_management.php?sort_by=first_name&order=ASC" class="btn btn-sm btn-primary">Sort By First Name (ASC)</a>
+                                    <a href="<?= $rootURL ?>/faculty/student_management.php?sort_by=first_name&order=DESC" class="btn btn-sm btn-primary">Sort By First Name (DESC)</a>
+                                    <a href="<?= $rootURL ?>/faculty/student_management.php?sort_by=last_name&order=ASC" class="btn btn-sm btn-primary">Sort By Last Name (ASC)</a>
+                                    <a href="<?= $rootURL ?>/faculty/student_management.php?sort_by=last_name&order=DESC" class="btn btn-sm btn-primary">Sort By Last Name (DESC)</a>
+                                </div>
                                 <div class="col-12">
                                     <table class="table table-striped align-middle">
                                         <thead>
                                             <tr class="table-primary">
-                                                <th>Name</th>
+                                                <th>First Name</th>
+                                                <th>Last Name</th>
                                                 <th>Username</th>
                                                 <th>Actions</th>
                                             </tr>
@@ -77,7 +92,10 @@ include('../logout.php');
                                             <?php while ($row = $students_res->fetch_assoc()) : ?>
                                                 <tr>
                                                     <td>
-                                                        <?php echo $row['name']; ?>
+                                                        <?php echo $row['first_name']; ?>
+                                                    </td>
+                                                    <td>
+                                                        <?php echo $row['last_name']; ?>
                                                     </td>
                                                     <td>
                                                         <?php echo $row['username']; ?>
