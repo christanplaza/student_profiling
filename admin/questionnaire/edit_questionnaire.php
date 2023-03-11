@@ -15,8 +15,8 @@ if ($conn) {
         if (isset($_POST['questionnaire_type']) && isset($_POST['questionnaire_name']) && isset($_POST['questionnaire_desc']) && isset($_POST['questionnaire_instruction'])) {
             $questionnaire_type = $_POST['questionnaire_type'];
             $questionnaire_name = $_POST['questionnaire_name'];
-            $questionnaire_desc = $_POST['questionnaire_desc'];
-            $questionnaire_instruction = $_POST['questionnaire_instruction'];
+            $questionnaire_desc = str_replace("'", "''", $_POST['questionnaire_desc']);
+            $questionnaire_instruction = str_replace("'", "''", $_POST['questionnaire_instruction']);
             $questionnaire_range = $_POST['questionnaire_range'];
 
             if ($questionnaire_type == "range" && isset($questionnaire_range) && strlen($questionnaire_range) > 0) {
