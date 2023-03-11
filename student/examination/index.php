@@ -373,7 +373,13 @@ include('../../logout.php');
                 <div class="col-12">
                     <div class="card shadow mb-5">
                         <div class="card-body">
-                            <div class="display-6 mb-5"><?php echo $questionnaire['name']; ?></div>
+                            <div class="display-4 mb-5"><?php echo $questionnaire['name']; ?></div>
+                            <div class="display-6 mb-5">Description</div>
+                            <p><?php echo $questionnaire['description']; ?></p>
+                            <hr class="mb-5" />
+                            <div class="display-6 mb-5">Instructions</div>
+                            <p><?php echo $questionnaire['instruction']; ?></p>
+                            <hr class="mb-5" />
                             <div class="row">
                                 <div class="col-12">
                                     <?php if ($questionnaire['question_type'] == "choices" && $questions_res) : ?>
