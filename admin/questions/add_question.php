@@ -21,7 +21,7 @@ if (isset($_GET['id'])) {
                 $question_group_id = $question_group['id'];
 
                 if (isset($_POST['submit'])) {
-                    $question_text = $_POST['question_text'];
+                    $question_text = str_replace("'", "''", $_POST['question_text']);
                     $correct_answer = $_POST['correct_answer'];
 
                     // If there is image
@@ -49,7 +49,7 @@ if (isset($_GET['id'])) {
         } else if ($questionnaire['question_type'] == "rank") {
             if ($question_group_res) {
                 if (isset($_POST["submit"])) {
-                    $question_text = $_POST['question_text'];
+                    $question_text = str_replace("'", "''", $_POST['question_text']);
                     $intelligence_area = $_POST['intelligence_area'];
 
                     while ($question_group = $question_group_res->fetch_assoc()) {
@@ -72,7 +72,7 @@ if (isset($_GET['id'])) {
                 $question_group_id = $question_group['id'];
 
                 if (isset($_POST["submit"])) {
-                    $question_text = $_POST['question_text'];
+                    $question_text = str_replace("'", "''", $_POST['question_text']);
                     $disagree_text = $_POST['disagree_text'];
                     $agree_text = $_POST['agree_text'];
 
