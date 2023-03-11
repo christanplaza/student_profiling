@@ -109,9 +109,9 @@ include('../../logout.php');
                                         <div class="mb-3">
                                             <label for="questionnaire_type" class="form-label">Question Type</label>
                                             <select name="questionnaire_type" id="questionnaire_type" class="form-select" required>
-                                                <option value="range" <?php echo $questionnaire['question_type'] == "range" ?? "selected" ?>>Range</option>
-                                                <option value="rank" <?php echo $questionnaire['question_type'] == "rank" ?? "selected" ?>>Ranking</option>
-                                                <option value="choices" <?php echo $questionnaire['question_type'] == "choices" ?? "selected" ?>>Choices</option>
+                                                <option value="range" <?php echo $questionnaire['question_type'] == "range" ? "selected" : "" ?>>Range</option>
+                                                <option value="rank" <?php echo $questionnaire['question_type'] == "rank" ? "selected" : "" ?>>Ranking</option>
+                                                <option value="choices" <?php echo $questionnaire['question_type'] == "choices" ? "selected" : "" ?>>Choices</option>
                                             </select>
                                         </div>
                                         <?php if ($questionnaire['question_type'] == "range") : ?>
