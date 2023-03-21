@@ -59,83 +59,53 @@ include('../../logout.php');
 <html lang="en">
 
 <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intelli.fied | Admin Dashboard</title>
     <?php include_once "../../components/header.php"; ?>
-    <title>Student Profiling | Admin</title>
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary shadow-lg">
-        <div class="container">
-            <a class="navbar-brand" href="#">Technological University Of The Philippines Visayas</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                    </li>
-                </ul>
-                <div class="dropdown">
-                    <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Menu
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">About</a></li>
-                        <li><a class="dropdown-item" href="#">Help</a></li>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-                        <li>
-                            <form method="POST"><button type="submit" name="logout" class="dropdown-item" href="#">Logout</button></form>
-                        </li>
-                    </ul>
-                </div>
+    <div class="container-fluid">
+        <div class="row flex-nowrap">
+            <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark shadow">
+                <?php $deep = true; ?>
+                <?php include_once "../components/new_panel.php" ?>
             </div>
-        </div>
-    </nav>
-
-    <div class="container">
-        <div class="mt-5">
-            <div class="row">
-                <div class="col-4">
-                    <?php include_once "../components/panel.php" ?>
-                </div>
-                <div class="col-8">
-                    <div class="card shadow">
-                        <div class="card-body">
-                            <div class="display-6">Create a Questionnaire</div>
-                            <div class="row mt-4">
-                                <div class="col-12">
-                                    <form method="POST">
-                                        <div class="mb-3">
-                                            <label for="questionnaire_name" class="form-label">Name</label>
-                                            <input type="text" name="questionnaire_name" id="questionnaire_name" class="form-control" required>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="questionnaire_desc" class="form-label">Description</label>
-                                            <textarea class="form-control" name="questionnaire_desc" id="questionnaire_desc" rows="3" style="resize:none;" required></textarea>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="questionnaire_instruction" class="form-label">Instruction</label>
-                                            <textarea class="form-control" name="questionnaire_instruction" id="questionnaire_instruction" rows="3" style="resize:none;" required></textarea>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="questionnaire_type" class="form-label">Question Type</label>
-                                            <select name="questionnaire_type" id="questionnaire_type" class="form-select" required>
-                                                <option selected disabled>Select a Question Type</option>
-                                                <option value="range">Range</option>
-                                                <option value="rank">Ranking</option>
-                                                <option value="choices">Choices</option>
-                                            </select>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="questionnaire_range" class="form-label">Range (Number of choices, e.g for range 1-5, put 5. Default is 5)</label>
-                                            <input type="number" min="1" name="questionnaire_range" id="questionnaire_range" class="form-control">
-                                        </div>
-                                        <input type="submit" name="submit" value="Create Questionnaire" class="btn btn-success">
-                                    </form>
+            <div class="col">
+                <div class="mt-4">
+                    <h1>Add Questionnaire</h1>
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <form method="POST">
+                                <div class="mb-3">
+                                    <label for="questionnaire_name" class="form-label">Name</label>
+                                    <input type="text" name="questionnaire_name" id="questionnaire_name" class="form-control" required>
                                 </div>
-                            </div>
+                                <div class="mb-3">
+                                    <label for="questionnaire_desc" class="form-label">Description</label>
+                                    <textarea class="form-control" name="questionnaire_desc" id="questionnaire_desc" rows="3" style="resize:none;" required></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="questionnaire_instruction" class="form-label">Instruction</label>
+                                    <textarea class="form-control" name="questionnaire_instruction" id="questionnaire_instruction" rows="3" style="resize:none;" required></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="questionnaire_type" class="form-label">Question Type</label>
+                                    <select name="questionnaire_type" id="questionnaire_type" class="form-select" required>
+                                        <option selected disabled>Select a Question Type</option>
+                                        <option value="range">Range</option>
+                                        <option value="rank">Ranking</option>
+                                        <option value="choices">Choices</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="questionnaire_range" class="form-label">Range (Number of choices, e.g for range 1-5, put 5. Default is 5)</label>
+                                    <input type="number" min="1" name="questionnaire_range" id="questionnaire_range" class="form-control">
+                                </div>
+                                <input type="submit" name="submit" value="Create Questionnaire" class="btn btn-success">
+                            </form>
                         </div>
                     </div>
                 </div>

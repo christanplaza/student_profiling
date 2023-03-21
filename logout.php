@@ -1,10 +1,17 @@
 <?php
+if (!isset($_SESSION)) {
+    session_start();
+}
 // include '../../config.php';
 if (isset($_POST['logout'])) {
-    setcookie('id', null, -1);
-    setcookie('username', null, -1);
-    setcookie('role', null, -1);
-    setcookie('name', null, -1);
-    setcookie('logged_in', null, -1);
+    if (isset($_SERVER['HTTP_COOKIE'])) {
+        $cookies = explode(';', $_SERVER['HTTP_COOKIE']);
+        foreach ($cookies as $cookie) {
+            $parts = explode('=', $cookie);
+            $name = trim($parts[0]);
+            setcookie($name, '', time() - 1000);
+            setcookie($name, '', time() - 1000, '/');
+        }
+    }
     header("location: $rootURL/");
 }

@@ -56,16 +56,28 @@ if (isset($_POST['submit'])) {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Profiling | Login</title>
+    <title>Student Profiling | Register</title>
     <!-- CSS only -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+
+    <style>
+        body {
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-image: url("<?= $rootURL ?>/assets/bg.jpg");
+        }
+
+        .btn-primary-brand {
+            background-color: #282f39;
+        }
+    </style>
 </head>
 
 <body>
-    <div class="container mt-5">
-        <div class="row justify-content-center">
+    <div class="container">
+        <div class="row justify-content-end align-items-center" style="height: 95vh">
             <div class="col-4">
-                <div class="card">
+                <div class="card border-0">
                     <div class="card-body text-center form-signin">
                         <h1 class="h3 mb-3 fw-normal">Register User</h1>
                         <?php if (isset($_SESSION['msg_type']) && isset($_SESSION['flash_message'])) : ?>
@@ -129,7 +141,7 @@ if (isset($_POST['submit'])) {
                                 </select>
                                 <label for="floatingInput">Section</label>
                             </div>
-                            <button class="w-100 btn btn-lg btn-primary" type="submit" name="submit">Create Account</button>
+                            <button class="w-100 btn btn-lg btn-primary-brand btn-dark" type="submit" name="submit">Create Account</button>
                             <div class="mt-3">
                                 Already have an account? <a href="index.php">Login Here.</a>
                             </div>

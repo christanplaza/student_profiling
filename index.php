@@ -20,11 +20,13 @@ if (isset($_POST['submit'])) {
                 if ($username == $user['username'] && $password == $user['password']) {
                     if (mysqli_query($conn, $sql)) {
                         $role = $user['role'];
-                        $name = $user['name'];
+                        $first_name = $user['first_name'];
+                        $last_name = $user['last_name'];
 
                         setcookie("username", $username, time() + (86400), "/"); // 86400 = 1 day
                         setcookie("role", $role, time() + (86400), "/"); // 86400 = 1 day
-                        setcookie("name", $name, time() + (86400), "/"); // 86400 = 1 day
+                        setcookie("first_name", $first_name, time() + (86400), "/"); // 86400 = 1 day
+                        setcookie("last_name", $last_name, time() + (86400), "/"); // 86400 = 1 day
                         setcookie("id", $user['id'], time() + (86400), "/"); // 86400 = 1 day
                         setcookie("logged_in", true, time() + (86400), "/"); // 86400 = 1 day
 
@@ -68,11 +70,22 @@ if (isset($_POST['submit'])) {
     <title>Student Profiling | Login</title>
     <!-- CSS only -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <style>
+        body {
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-image: url("<?= $rootURL ?>/assets/bg.jpg");
+        }
+
+        .btn-primary-brand {
+            background-color: #282f39;
+        }
+    </style>
 </head>
 
 <body>
-    <div class="container mt-5">
-        <div class="row justify-content-center">
+    <div class="container">
+        <div class="row justify-content-end align-items-center" style="height: 95vh">
             <div class="col-4">
                 <?php if (isset($_SESSION['msg_type']) && isset($_SESSION['flash_message'])) : ?>
                     <div class="alert alert-<?php echo $_SESSION["msg_type"]; ?> alert-dismissible fade show" role="alert">
@@ -83,7 +96,7 @@ if (isset($_POST['submit'])) {
                 unset($_SESSION['msg_type']);
                 unset($_SESSION['flash_message']);
                 ?>
-                <div class="card">
+                <div class="card border-0">
                     <div class="card-body text-center form-signin">
                         <h1 class="h3 mb-3 fw-normal">User Login</h1>
 
@@ -96,7 +109,7 @@ if (isset($_POST['submit'])) {
                                 <input type="password" name="password" class="form-control" placeholder="Password" required>
                                 <label for="password">Password</label>
                             </div>
-                            <button class="w-100 btn btn-lg btn-primary" type="submit" name="submit">Login</button>
+                            <button class="w-100 btn btn-lg btn-primary-brand btn-dark" type="submit" name="submit">Login</button>
                             <div class="mt-3">
                                 Don't have an account? <a href="register.php">Register Here.</a>
                             </div>
