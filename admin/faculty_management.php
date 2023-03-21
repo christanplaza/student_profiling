@@ -69,7 +69,7 @@ include('../logout.php');
                                     <tr class="table-primary">
                                         <th>First Name</th>
                                         <th>Last Name</th>
-                                        <th>Username</th>
+                                        <th>TUPV ID</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>

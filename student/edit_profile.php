@@ -28,7 +28,7 @@ if (isset($_COOKIE['id'])) {
             $educ_secondary = $_POST['educ_secondary'];
             $educ_highschool = $_POST['educ_highschool'];
 
-            if (isset($_POST['password']) && isset($_POST['confirm_password'])) {
+            if (isset($_POST['password']) && isset($_POST['confirm_password']) && strlen($_POST['password']) > 0 && strlen($_POST['confirm_password']) > 0) {
                 $password = $_POST['password'];
                 $confirm_password = $_POST['confirm_password'];
 
@@ -131,7 +131,7 @@ include('../logout.php');
                                                             </td>
                                                         </tr>
                                                         <tr>
-                                                            <td>Username</td>
+                                                            <td>TUPV ID</td>
                                                             <td>
                                                                 <input type="text" name="username" value="<?= $user['username']; ?>" class="form-control" required>
                                                             </td>
@@ -145,13 +145,18 @@ include('../logout.php');
                                                         <tr>
                                                             <td>Birthdate</td>
                                                             <td>
-                                                                <input type="text" name="birthdate" value="<?= $user['birthdate']; ?>" class="form-control" required>
+                                                                <input type="date" name="birthdate" value="<?= $user['birthdate']; ?>" class="form-control" max="<?= date('Y-m-d'); ?>" required>
                                                             </td>
                                                         </tr>
                                                         <tr>
                                                             <td>Gender</td>
                                                             <td>
-                                                                <input type="text" name="gender" value="<?= $user['gender']; ?>" class="form-control" required>
+                                                                <select name="gender" class="form-select" required>
+                                                                    <option label="Please Select"></option>
+                                                                    <option value="male" <?= $user['gender'] == "male" ? "selected" : ""; ?>>Male</option>
+                                                                    <option value="female" <?= $user['gender'] == "female" ? "selected" : ""; ?>>Female</option>
+                                                                    <option value="others" <?= $user['gender'] == "others" ? "selected" : ""; ?>>Others</option>
+                                                                </select>
                                                             </td>
                                                         </tr>
                                                         <tr>

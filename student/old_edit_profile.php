@@ -155,7 +155,7 @@ include('../logout.php');
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td>Username</td>
+                                                <td>TUPV ID</td>
                                                 <td>
                                                     <input type="text" name="username" value="<?= $user['username']; ?>" class="form-control" required>
                                                 </td>

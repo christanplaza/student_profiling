@@ -88,7 +88,7 @@ include('../logout.php');
                                     <td><?php echo $user['last_name']; ?></td>
                                 </tr>
                                 <tr>
-                                    <td>Username</td>
+                                    <td>TUPV ID</td>
                                     <td><?php echo $user['username']; ?></td>
                                 </tr>
                                 <tr>

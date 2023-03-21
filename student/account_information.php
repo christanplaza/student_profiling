@@ -76,7 +76,7 @@ include('../logout.php');
                                                         <td><?php echo $user['last_name']; ?></td>
                                                     </tr>
                                                     <tr>
-                                                        <td>Username</td>
+                                                        <td>TUPV ID</td>
                                                         <td><?php echo $user['username']; ?></td>
                                                     </tr>
                                                     <tr>
@@ -89,11 +89,44 @@ include('../logout.php');
                                                     </tr>
                                                     <tr>
                                                         <td>Gender</td>
-                                                        <td><?php echo $user['gender']; ?></td>
+                                                        <td>
+                                                            <?php switch ($user['gender']) {
+                                                                case "male":
+                                                                    echo "Male";
+                                                                    break;
+                                                                case "female":
+                                                                    echo "Female";
+                                                                    break;
+                                                                case "others":
+                                                                    echo "Others";
+                                                                    break;
+                                                            } ?>
+                                                        </td>
                                                     </tr>
                                                     <tr>
                                                         <td>Course</td>
-                                                        <td><?php echo $user['course']; ?></td>
+                                                        <td>
+                                                            <?php switch ($user['course']) {
+                                                                case "electronics":
+                                                                    echo "Electronics Engineering";
+                                                                    break;
+                                                                case "mechanical":
+                                                                    echo "Mechanical Engineering";
+                                                                    break;
+                                                                case "computer":
+                                                                    echo "Computer Engineering";
+                                                                    break;
+                                                                case "electrical":
+                                                                    echo "Electrical Engineering";
+                                                                    break;
+                                                                case "mechatronics":
+                                                                    echo "Mechatronics Engineering";
+                                                                    break;
+                                                                case "instrumentation_control":
+                                                                    echo "Instrumentation and";
+                                                                    break;
+                                                            } ?>
+                                                        </td>
                                                     </tr>
                                                     <tr>
                                                         <td>Year Level</td>

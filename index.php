@@ -33,7 +33,7 @@ if (isset($_POST['submit'])) {
                         if ($role == "admin") {
                             header("location: $rootURL/admin/");
                         } else if ($role == "faculty") {
-                            header("location: $rootURL/faculty/");
+                            header("location: $rootURL/faculty/student_management.php");
                         } else {
                             header("location: $rootURL/student/");
                         }
@@ -102,11 +102,11 @@ if (isset($_POST['submit'])) {
 
                         <form method="POST">
                             <div class="form-floating mb-3">
-                                <input type="text" name="username" class="form-control" placeholder="JohnDoe27" required>
-                                <label for="floatingInput">Username</label>
+                                <input type="text" name="username" class="form-control" required>
+                                <label for="floatingInput">Username / TUPV ID</label>
                             </div>
                             <div class="form-floating mb-3">
-                                <input type="password" name="password" class="form-control" placeholder="Password" required>
+                                <input type="password" name="password" class="form-control" required>
                                 <label for="password">Password</label>
                             </div>
                             <button class="w-100 btn btn-lg btn-primary-brand btn-dark" type="submit" name="submit">Login</button>
