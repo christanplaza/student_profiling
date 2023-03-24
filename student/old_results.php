@@ -99,7 +99,7 @@ include('../logout.php');
                                                         <td>
                                                             <?php if ($eval['validity'] == 1) : ?>
                                                                 <h6 class="m-0">
-                                                                    <span class="badge bg-success">Valid</span>
+                                                                    <span class="badge bg-success">Taken</span>
                                                                 </h6>
                                                             <?php else : ?>
                                                                 <h6 class="m-0">

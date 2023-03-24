@@ -134,7 +134,7 @@ include('../logout.php');
                                                         <td>
                                                             <?php if ($eval['validity'] == 1) : ?>
                                                                 <h6 class="m-0">
-                                                                    <span class="badge bg-success">Valid</span>
+                                                                    <span class="badge bg-success">Taken</span>
                                                                 </h6>
                                                             <?php else : ?>
                                                                 <h6 class="m-0">
@@ -143,7 +143,7 @@ include('../logout.php');
                                                             <?php endif ?>
                                                         </td>
                                                         <td>
-                                                            <a href="#" class="btn btn-warning">Invalidate</a>
+                                                            <a href="#" class="btn btn-warning">Retake</a>
                                                         </td>
                                                     </tr>
                                                 <?php endwhile; ?>

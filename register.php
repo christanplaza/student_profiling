@@ -59,6 +59,7 @@ if (isset($_POST['submit'])) {
     <title>Student Profiling | Register</title>
     <!-- CSS only -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
 
     <style>
         body {
@@ -102,12 +103,19 @@ if (isset($_POST['submit'])) {
                                 <input type="text" name="username" class="form-control" placeholder="JohnDoe27" required>
                                 <label for="floatingInput">TUPV ID</label>
                             </div>
-                            <div class="form-floating mb-3">
-                                <input type="password" name="password" class="form-control" placeholder="Password" required>
+                            <div class="form-floating mb-3 input-group">
+                                <input type="password" name="password" class="form-control" id="password" required>
+                                <span class="input-group-text" onclick="togglePasswordVisibility()">
+                                    <i class="bi bi-eye-slash" id="icon"></i>
+                                </span>
                                 <label for="password">Password</label>
                             </div>
-                            <div class="form-floating mb-3">
-                                <input type="password" name="password-confirm" class="form-control" placeholder="Confirm Password" required>
+
+                            <div class="form-floating mb-3 input-group">
+                                <input type="password" name="password-confirm" class="form-control" id="password-confirm" required>
+                                <span class="input-group-text" onclick="toggleConfirmPasswordVisibility()">
+                                    <i class="bi bi-eye-slash" id="icon2"></i>
+                                </span>
                                 <label for="password-confirm">Confirm Password</label>
                             </div>
                             <div class="form-floating mb-3">
@@ -151,6 +159,39 @@ if (isset($_POST['submit'])) {
             </div>
         </div>
     </div>
+
+
+    <script>
+        function togglePasswordVisibility() {
+            const passwordInput = document.getElementById("password");
+            const icon = document.getElementById("icon");
+
+            if (passwordInput.type == "password") {
+                passwordInput.type = "text";
+                icon.classList.remove("bi-eye-slash");
+                icon.classList.add("bi-eye-fill");
+            } else {
+                passwordInput.type = "password";
+                icon.classList.remove("bi-eye-fill");
+                icon.classList.add("bi-eye-slash");
+            }
+        }
+
+        function toggleConfirmPasswordVisibility() {
+            const passwordInput = document.getElementById("password-confirm");
+            const icon = document.getElementById("icon2");
+
+            if (passwordInput.type == "password") {
+                passwordInput.type = "text";
+                icon.classList.remove("bi-eye-slash");
+                icon.classList.add("bi-eye-fill");
+            } else {
+                passwordInput.type = "password";
+                icon.classList.remove("bi-eye-fill");
+                icon.classList.add("bi-eye-slash");
+            }
+        }
+    </script>
 </body>
 
 </html>

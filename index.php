@@ -70,6 +70,7 @@ if (isset($_POST['submit'])) {
     <title>Student Profiling | Login</title>
     <!-- CSS only -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
     <style>
         body {
             background-size: cover;
@@ -105,8 +106,11 @@ if (isset($_POST['submit'])) {
                                 <input type="text" name="username" class="form-control" required>
                                 <label for="floatingInput">Username / TUPV ID</label>
                             </div>
-                            <div class="form-floating mb-3">
-                                <input type="password" name="password" class="form-control" required>
+                            <div class="form-floating mb-3 input-group">
+                                <input type="password" name="password" class="form-control" id="password" required>
+                                <span class="input-group-text" onclick="togglePasswordVisibility()">
+                                    <i class="bi bi-eye-slash" id="icon"></i>
+                                </span>
                                 <label for="password">Password</label>
                             </div>
                             <button class="w-100 btn btn-lg btn-primary-brand btn-dark" type="submit" name="submit">Login</button>
@@ -119,6 +123,23 @@ if (isset($_POST['submit'])) {
             </div>
         </div>
     </div>
+
+    <script>
+        function togglePasswordVisibility() {
+            const passwordInput = document.getElementById("password");
+            const icon = document.getElementById("icon");
+
+            if (passwordInput.type == "password") {
+                passwordInput.type = "text";
+                icon.classList.remove("bi-eye-slash");
+                icon.classList.add("bi-eye-fill");
+            } else {
+                passwordInput.type = "password";
+                icon.classList.remove("bi-eye-fill");
+                icon.classList.add("bi-eye-slash");
+            }
+        }
+    </script>
 </body>
 
 </html>
