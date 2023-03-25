@@ -1,7 +1,19 @@
 <form method="POST">
     <input type="hidden" value="range" name="type" />
-    <?php $count = 1; ?>
+    <?php $count = 1 + (($current_page - 1) * $per_page); ?>
+    <?php $count_start = $count; ?>
     <?php while ($row = $questions_res->fetch_assoc()) : ?>
+        <?php
+        $progress = "";
+        if ($current_page != $total_pages) {
+            $progress = "append";
+        } else if ($current_page == $total_pages) {
+            $progress = "final";
+        }
+        ?>
+        <input type="hidden" value="<?= $progress ?>" name="progress" />
+        <input type="hidden" value="<?= $count_start ?>" name="count_start" />
+        <input type="hidden" value="<?= $count ?>" name="count_end" />
         <div class="mb-4">
             <p><?php echo $count; ?>. <?php echo $row['question_text']; ?></p>
         </div>
@@ -21,5 +33,12 @@
         <hr />
         <?php $count++; ?>
     <?php endwhile; ?>
-    <button type="submit" class="btn btn-success float-end" name="submit">Submit</button>
+    <?php
+    if ($current_page == $total_pages) {
+        echo "<button type=\"submit\" class=\"btn btn-success float-end\" name=\"submit\">Submit</button>";
+    } else {
+        echo "<button type=\"submit\" class=\"btn btn-secondary float-end\" name=\"submit\">Next</button>";
+        // echo "<a href=\"$rootURL/student/examination/index.php?questionnaire=$questionnaire_id&eval=$evaluation_id&page=$next_page\" class=\"btn btn-secondary float-end\">Next</a> ";
+    }
+    ?>
 </form>
