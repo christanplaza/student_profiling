@@ -111,8 +111,6 @@ include('../../logout.php');
                 <?php $deep = true; ?>
                 <?php include_once "../components/new_panel.php" ?>
             </div>
-
-
             <div class="col">
                 <div class="mt-4">
                     <h1>Add Question</h1>
@@ -171,6 +169,10 @@ include('../../logout.php');
                                             <input type="file" name="question_file" id="question_file" class="form-control" required>
                                         </div>
                                         <div class="mb-3">
+                                            <label for="image-preview" class="form-label">Image Preview</label>
+                                            <img id="image-preview" src="../../assets/placeholder.jpg" class="w-50 form-control">
+                                        </div>
+                                        <div class="mb-3">
                                             <label class="form-label" for="question<?php echo $count; ?>">The Correct Answer</label>
                                             <select class="form-control" name="correct_answer" required>
                                                 <option selected disabled>Choose the Correct Answer</option>
@@ -190,6 +192,16 @@ include('../../logout.php');
             </div>
         </div>
     </div>
+    <script>
+        document.getElementById('question_file').addEventListener('change', function(event) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('image-preview').style.display = 'block';
+                document.getElementById('image-preview').src = e.target.result;
+            }
+            reader.readAsDataURL(event.target.files[0]);
+        });
+    </script>
 </body>
 
 </html>
