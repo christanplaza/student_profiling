@@ -39,6 +39,7 @@ if ($conn) {
                         $_SESSION['msg_type'] = 'danger';
                         $_SESSION['flash_message'] = 'Going back to previous page is not allowed.';
                         header("Location: $rootURL/student/examination/index.php?questionnaire=$questionnaire_id&eval=$evaluation_id&page=$prev");
+                        session_write_close();
                     }
                 }
             } else {
@@ -65,14 +66,34 @@ if ($conn) {
 
         if ($questionnaire['question_type'] == "rank" && $question_group_res) {
             $allQuestions = array();
+
+            if (isset($_GET['page'])) {
+                $current_page = $_GET['page'];
+                if (isset($_SESSION['current_page'])) {
+                    if ($current_page < $_SESSION['current_page']) {
+                        $prev = $_SESSION['current_page'];
+                        $_SESSION['msg_type'] = 'danger';
+                        $_SESSION['flash_message'] = 'Going back to previous page is not allowed.';
+                        header("Location: $rootURL/student/examination/index.php?questionnaire=$questionnaire_id&eval=$evaluation_id&page=$prev");
+                        session_write_close();
+                    }
+                }
+            } else {
+                $current_page = 1;
+            }
+
+            $_SESSION['current_page'] = $current_page;
+
             while ($question_group = $question_group_res->fetch_assoc()) {
                 $question_group_id = $question_group['id'];
 
-                $sql = "SELECT * FROM questions WHERE question_group_id = '$question_group_id'";
-                $questions_res = mysqli_query($conn, $sql);
-                while ($question = $questions_res->fetch_assoc()) {
-                    $question['group'] = $question_group['count'];
-                    array_push($allQuestions, $question);
+                if ($question_group['count'] == $current_page) {
+                    $sql = "SELECT * FROM questions WHERE question_group_id = '$question_group_id'";
+                    $questions_res = mysqli_query($conn, $sql);
+                    while ($question = $questions_res->fetch_assoc()) {
+                        $question['group'] = $question_group['count'];
+                        array_push($allQuestions, $question);
+                    }
                 }
             }
         }
@@ -93,7 +114,6 @@ if ($conn) {
             $index = 0;
             while ($question = $questions_res->fetch_assoc()) {
                 if ($question['correct_answer'] == $user_answers[$index]) {
-                    var_dump($question['correct_answer'], $user_answers[$index]);
                     $totalScore++;
                 }
 
@@ -173,66 +193,167 @@ if ($conn) {
                 echo $conn->error;
             }
         } else if ($_POST['type'] == "rank") {
-            $answers = array();
-            $hasError = false;
-            $error = "";
-
-            // Verify answers
-            for ($i = 1; $i <= 27; $i++) {
-                array_push($answers, $_POST["question$i"]);
-            }
-
-            // 1-9 only.
-            if (max($answers) > 9 || min($answers) < 1) {
-                $hasError = true;
-                $error = "Rank each group from 1-9 only.";
-            }
-
-            // Groups
-            for ($i = 0; $i < 3; $i++) {
-                // Questions
-                $num = $i * 9;
-                $group = array();
-                for ($j = 1; $j <= 9; $j++) {
-                    $idx = $num + $j;
-                    array_push($group, $_POST["question$idx"]);
-                }
-
-                $filtered = array_unique($group, SORT_NUMERIC);
-
-                if (count($group) != count($filtered)) {
-                    $hasError = true;
-                    $error = "Rank each group from 1-9 only. There should be no duplicates";
-                }
-            }
-
-            // Get all answers
-            if (!$hasError) {
-                $kinesthetic = $_POST['question1'] + $_POST['question10'] + $_POST['question19'];
-                $existential = $_POST['question2'] + $_POST['question11'] + $_POST['question20'];
-                $intrapersonal = $_POST['question4'] + $_POST['question13'] + $_POST['question12'];
-                $interpersonal = $_POST['question3'] +  $_POST['question21'] + $_POST['question22'];
-                $logic = $_POST['question5'] + $_POST['question14'] + $_POST['question23'];
-                $musical = $_POST['question6'] + $_POST['question15'] + $_POST['question24'];
-                $naturalistic = $_POST['question7'] + $_POST['question16'] + $_POST['question25'];
-                $verbal = $_POST['question8'] + $_POST['question17'] + $_POST['question26'];
-                $visual = $_POST['question9'] + $_POST['question18'] + $_POST['question27'];
-                $results = array("Bodily / Kinesthetic" => $kinesthetic, "Existential" => $existential, "Interpersonal" => $interpersonal, "Intrapersonal" => $intrapersonal, "Logic" => $logic, "Musical" => $musical, "Naturalistic" => $naturalistic, "Verbal" => $verbal, "Visual" => $visual);
-                asort($results);
-
-                $eval = "Your Multiple Intelligence is ranked as follows, from top to bottom. \n";
-                foreach ($results as $key => $result) {
-                    $eval .= $key . ": " . $result . "\n";
-                }
-
-                $sql = "UPDATE evaluation SET is_complete = '1', validity = '1', evaluation_result = '$eval' WHERE id = '$evaluation_id'";
-                if (mysqli_query($conn, $sql)) {
-                    header("location: $rootURL/student/result.php?id=$evaluation_id");
+            if ($_POST['progress'] == "append") {
+                if (isset($_SESSION['responses'])) {
+                    $responses = $_SESSION['responses'];
                 } else {
-                    echo $conn->error;
+                    $responses = array();
                 }
-            } else {
-                $_SESSION['error'] = $error;
+                $answers = array();
+
+                $count_start = $_POST['count_start'];
+                $count_end = $_POST['count_end'];
+
+                for ($i = $count_start; $i <= $count_end; $i++) {
+                    $answers["question$i"] = $_POST["question$i"];
+                }
+
+                $hasError = false;
+                $errorMsg = "";
+
+                // check if the array contains exactly 9 elements
+                if (count($answers) !== 9) {
+                    $errorMsg =  "The array does not contain exactly 9 elements.";
+                    $hasError = true;
+                }
+
+                $duplicates = array();
+                foreach ($answers as $key => $value) {
+                    if (isset($duplicates[$value])) {
+                        $duplicates[$value][] = $key;
+                    } else {
+                        $duplicates[$value] = array($key);
+                    }
+                }
+                if (count(array_unique($answers)) !== 9) {
+                    $hasError = true;
+                    $duplicateKeys = array();
+                    foreach ($duplicates as $value => $keys) {
+                        if (count($keys) > 1) {
+                            $duplicateKeys[] = implode(", ", $keys);
+                        }
+                    }
+                    if (count($duplicateKeys) > 0) {
+                        $errorMsg = "The following question(s) have duplicates: " . implode("; ", $duplicateKeys) . ".";
+                    } else {
+                        $errorMsg = "There should be no duplicates.";
+                    }
+                }
+
+                // check if all the elements in the array are between 1 and 9
+                foreach ($answers as $question => $answer) {
+                    $questionNumber = (int) filter_var($answer, FILTER_SANITIZE_NUMBER_INT);
+                    if ($answer < 1 || $answer > 9) {
+                        $errorMsg =  "The answer for question $questionNumber is not between 1 and 9.";
+                        $hasError = true;
+                    }
+                    if (!in_array($questionNumber, range(1, 9))) {
+                        var_dump($questionNumber);
+                        $errorMsg =  "The question key $question is not in the correct format.";
+                        $hasError = true;
+                    }
+                }
+
+                if ($hasError) {
+                    $_SESSION['msg_type'] = 'danger';
+                    $_SESSION['flash_message'] = $errorMsg;
+                } else {
+                    for ($i = $count_start; $i <= $count_end; $i++) {
+                        $responses += array("question" . $i => $_POST["question" . $i]);
+                    }
+                    $_SESSION['responses'] = $responses;
+                    $next_page = ++$current_page;
+
+                    header("location: $rootURL/student/examination/index.php?questionnaire=$questionnaire_id&eval=$evaluation_id&page=$next_page");
+                }
+            } else if ($_POST['progress'] == "final") {
+                $responses = $_SESSION['responses'];
+                $answers = array();
+
+                $count_start = $_POST['count_start'];
+                $count_end = $_POST['count_end'];
+
+                for ($i = $count_start; $i <= $count_end; $i++) {
+                    $answers["question$i"] = $_POST["question$i"];
+                }
+
+                $hasError = false;
+                $errorMsg = "";
+
+                // check if the array contains exactly 9 elements
+                if (count($answers) !== 9) {
+                    $errorMsg =  "The array does not contain exactly 9 elements.";
+                    $hasError = true;
+                }
+
+                $duplicates = array();
+                foreach ($answers as $key => $value) {
+                    if (isset($duplicates[$value])) {
+                        $duplicates[$value][] = $key;
+                    } else {
+                        $duplicates[$value] = array($key);
+                    }
+                }
+                if (count(array_unique($answers)) !== 9) {
+                    $hasError = true;
+                    $duplicateKeys = array();
+                    foreach ($duplicates as $value => $keys) {
+                        if (count($keys) > 1) {
+                            $duplicateKeys[] = implode(", ", $keys);
+                        }
+                    }
+                    if (count($duplicateKeys) > 0) {
+                        $errorMsg = "The following question(s) have duplicates: " . implode("; ", $duplicateKeys) . ".";
+                    } else {
+                        $errorMsg = "There should be no duplicates.";
+                    }
+                }
+
+                // check if all the elements in the array are between 1 and 9
+                foreach ($answers as $question => $answer) {
+                    $questionNumber = (int) filter_var($answer, FILTER_SANITIZE_NUMBER_INT);
+                    if ($answer < 1 || $answer > 9) {
+                        $errorMsg =  "The answer for question $questionNumber is not between 1 and 9.";
+                        $hasError = true;
+                    }
+                    if (!in_array($questionNumber, range(1, 9))) {
+                        $errorMsg =  "The question key $question is not in the correct format.";
+                        $hasError = true;
+                    }
+                }
+
+                if ($hasError) {
+                    $_SESSION['msg_type'] = 'danger';
+                    $_SESSION['flash_message'] = $errorMsg;
+                } else {
+                    for ($i = $count_start; $i <= $count_end; $i++) {
+                        $responses += array("question" . $i => $_POST["question" . $i]);
+                    }
+
+                    $kinesthetic = $responses['question1'] + $responses['question10'] + $responses['question19'];
+                    $existential = $responses['question2'] + $responses['question11'] + $responses['question20'];
+                    $intrapersonal = $responses['question4'] + $responses['question13'] + $responses['question12'];
+                    $interpersonal = $responses['question3'] +  $responses['question21'] + $responses['question22'];
+                    $logic = $responses['question5'] + $responses['question14'] + $responses['question23'];
+                    $musical = $responses['question6'] + $responses['question15'] + $responses['question24'];
+                    $naturalistic = $responses['question7'] + $responses['question16'] + $responses['question25'];
+                    $verbal = $responses['question8'] + $responses['question17'] + $responses['question26'];
+                    $visual = $responses['question9'] + $responses['question18'] + $responses['question27'];
+                    $results = array("Bodily / Kinesthetic" => $kinesthetic, "Existential" => $existential, "Interpersonal" => $interpersonal, "Intrapersonal" => $intrapersonal, "Logic" => $logic, "Musical" => $musical, "Naturalistic" => $naturalistic, "Verbal" => $verbal, "Visual" => $visual);
+                    asort($results);
+
+                    $eval = "Your Multiple Intelligence is ranked as follows, from top to bottom. \n";
+                    foreach ($results as $key => $result) {
+                        $eval .= $key . ": " . $result . "\n";
+                    }
+
+                    $sql = "UPDATE evaluation SET is_complete = '1', validity = '1', evaluation_result = '$eval' WHERE id = '$evaluation_id'";
+                    if (mysqli_query($conn, $sql)) {
+                        header("location: $rootURL/student/result.php?id=$evaluation_id");
+                    } else {
+                        echo $conn->error;
+                    }
+                }
             }
         } else if ($_POST['type'] == "range") {
             if ($questionnaire['range_type'] == "eq") {
