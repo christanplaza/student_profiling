@@ -13,6 +13,11 @@
     <hr>
     <ul class="nav nav-pills flex-column mb-auto">
         <li class="nav-item">
+            <a href="<?= $rootURL ?>/faculty/account_information.php" class="nav-link text-white" aria-current="page">
+                Account Information
+            </a>
+        </li>
+        <li class="nav-item">
             <a href="<?= $rootURL ?>/faculty/student_management.php" class="nav-link text-white" aria-current="page">
                 Student Management
             </a>
