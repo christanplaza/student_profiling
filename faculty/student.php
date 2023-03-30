@@ -15,18 +15,18 @@ if (isset($_GET['id'])) {
     } else {
         echo "Couldn't connect to database.";
     }
-} else if (isset($_POST['id'])) {
+}
+
+if (isset($_POST['retake'])) {
     if ($conn) {
-        $id = $_POST['id'];
-        $sql = "DELETE FROM users WHERE id = '$id'";
+        $retake_id = $_POST['retake'];
+        $sql = "UPDATE evaluation SET validity = 0 WHERE id = $retake_id";
 
         mysqli_query($conn, $sql);
-        header("location: $rootURL/admin/student_management.php");
+        header("location: $rootURL/faculty/student.php?id=$id");
     } else {
         echo "Couldn't connect to database.";
     }
-} else {
-    header("location: $rootURL/admin/student_management.php");
 }
 include('../logout.php');
 
@@ -113,8 +113,15 @@ include('../logout.php');
                                                 <?php endif ?>
                                             </td>
                                             <td>
-                                                <a href="<?= $rootURL ?>/faculty/result.php?id=<?php echo $eval['id']; ?>" class="btn btn-primary">View Details</a>
-                                                <a href="#" class="btn btn-warning">Retake</a>
+                                                <div class="d-flex float-start">
+                                                    <a href="<?= $rootURL ?>/faculty/result.php?id=<?php echo $eval['id']; ?>" class="btn btn-primary">View Details</a>
+                                                    <?php if ($eval['validity'] == 1) : ?>
+                                                        <form method="POST">
+                                                            <input type="hidden" name="retake" value="<?php echo $eval['id']; ?>">
+                                                            <button type="submit" class="btn btn-warning">Retake</button>
+                                                        </form>
+                                                    <?php endif ?>
+                                                </div>
                                             </td>
                                         </tr>
                                     <?php endwhile; ?>
