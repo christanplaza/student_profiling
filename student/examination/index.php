@@ -342,13 +342,31 @@ if ($conn) {
                     $results = array("Bodily / Kinesthetic" => $kinesthetic, "Existential" => $existential, "Interpersonal" => $interpersonal, "Intrapersonal" => $intrapersonal, "Logic" => $logic, "Musical" => $musical, "Naturalistic" => $naturalistic, "Verbal" => $verbal, "Visual" => $visual);
                     asort($results);
 
+                    $descriptions = array(
+                        "Bodily / Kinesthetic" => "People high in bodily–kinaesthetic intelligence have an excellent sense of timing and a great mind-body coordination as well as fine and gross motor skills. They are able to use their bodies to convey feelings and ideas and, as a result, they often take up roles in dance, sports or medicine. They use their bodies to solve problems and create something meaningful.",
+                        "Existential" => "People with high levels of existential intelligence often think more deeply about daily occurrences. They ask questions similar to why are we here? And, what is the point of all this? They are often deeply philosophical thinkers and they have the capacity to look for answers to questions bigger than themselves. Existential intelligence is often called spiritual or moral intelligence.",
+                        "Interpersonal" => "People with this type of intelligence are often good at reading verbal and non-verbal cues as well as determining temperament and mood. They feel empathy easily. Often this type of intelligence can be found in leaders, politicians, social workers, life coaches and psychologists.",
+                        "Intrapersonal" => " People with high Intrapersonal intelligence understands oneself and the human condition as a whole. They are known as ''self-smart'' people and, despite having a deeper understanding of their own emotions, they are often quite shy. Philosophers, spiritual leaders, psychologist and writers usually have high intra-personal intelligence.",
+                        "Logic" => "People with this type of intelligence are excellent at maths and working with numbers. They can recognise patterns easily and work out processes in a logical manner. They have excellent reasoning skills and can often talk themselves out of trouble. People with high logical–mathematical intelligence are often drawn to games involving strategy and the solving of puzzles.",
+                        "Musical" => "People with musical intelligence are generally more sensitive to sound and often pick up on noises that others would not normally be aware of. They have an excellent sense of rhythm and the ability to recognise tone and pitch. More often than not they play an instrument or are involved in music as a profession.",
+                        "Naturalistic" => "People with high naturalistic intelligence are sensitive to subtle changes in nature and the environment around them. Others connect with animals easily and some are completely at home in nature. Naturalistic intelligence describes people who are sensitive to the natural world. They enjoy being outside, nurturing and exploring the environment.",
+                        "Verbal" => "People with high linguistic intelligence are very good at putting their feelings and thoughts into words in order to make others understand them. They are drawn to activities such as reading, writing and public speaking.",
+                        "Visual" => "People with high spatial intelligence are generally very creative and usually have a vivid imagination, high artistic ability and excellent spatial reasoning. These people are often referred to as ''picture smart'' and can be found in professions such as architecture, design and map reading.",
+                    );
+
+                    $keys = array_keys($results);
+
                     $eval = "Your Multiple Intelligence is ranked as follows, from top to bottom. \n";
                     foreach ($results as $key => $result) {
                         $eval .= $key . ": " . $result . "\n";
+                        $eval .= $descriptions[$key] . "\n\n";
                     }
 
                     $sql = "UPDATE evaluation SET is_complete = '1', validity = '1', evaluation_result = '$eval' WHERE id = '$evaluation_id'";
                     if (mysqli_query($conn, $sql)) {
+                        if (isset($_SESSION['responses'])) {
+                            unset($_SESSION['responses']);
+                        }
                         header("location: $rootURL/student/result.php?id=$evaluation_id");
                     } else {
                         echo $conn->error;
@@ -414,8 +432,16 @@ if ($conn) {
                     }
 
                     $complete_array = array("Self Awareness" => $self_awareness_total, "Managing Emotions" => $managing_emotions_total, "Motivating Oneself" => $motivating_oneself_total, "Empathy" => $empathy_total, "Social Skills" => $social_skill_total);
+                    $results_array = array(
+                        "Self-Awareness is the ability to understand your own emotions and their effects on your performance. If this is your strength, it means that you know what you are feeling, why you''re feeling it and how it helps or hurts what you are trying to do. You sense how others see you and so align your self-image with a larger reality.",
+                        "The ability to manage emotions effectively is a crucial part of emotional quotient. Managing your emotions helps you make better decisions, big or small. If this is your strength, it means that you are aware  of triggers, and you can gain insights on how to respond in constructive ways.",
+                        "Self-motivation includes your personal drive to improve and achieve, commitment to your goals, initiative, or readiness to act on opportunities, and optimism and resilience. If this is your strength, it means you have ability to take initiative and action to pursue goals and complete tasks. You have an inner drive to take action, to create and to achieve. It''s what pushes you to keep going on tasks, especially those you''re pursuing because you want to, not because someone told you to.",
+                        "Empathy is an important element of Emotional Quotient (EQ). It can be described simply as “to put yourself in another person''s shoes.” By doing so, you become more aware of the feelings and emotions of other people. If this is your strength, it means that you are a very understanding person by being able to see the world from another person''s viewpoint.",
+                        "People with high social skills are skilled in communication, empathy, and conflict resolution. They are able to express their thoughts and feelings clearly, listen actively to others, and work collaboratively to achieve common goals. They are also able to recognize and respond appropriately to the emotions of others, which allows them to build rapport and establish trust."
+                    );
 
                     $eval = "Your Emotional Quotient results are as follows: \n";
+                    $count = 0;
                     foreach ($complete_array as $key => $item) {
                         $text = "";
                         if ($item >= 35 && $item <= 50) {
@@ -426,10 +452,15 @@ if ($conn) {
                             $text .= "Development Priority";
                         }
                         $eval .= $key . ": " . $item . " ($text)\n";
+                        $eval .= $results_array[$count] . "\n\n";
+                        $count++;
                     }
 
                     $sql = "UPDATE evaluation SET is_complete = '1', validity = '1', evaluation_result = '$eval' WHERE id = '$evaluation_id'";
                     if (mysqli_query($conn, $sql)) {
+                        if (isset($_SESSION['responses'])) {
+                            unset($_SESSION['responses']);
+                        }
                         header("location: $rootURL/student/result.php?id=$evaluation_id");
                     } else {
                         echo $conn->error;
@@ -509,21 +540,28 @@ if ($conn) {
                     // Compute for Control percentage
                     $c_percentage = $c_total / 25 * 100;
                     $eval .= "Control: $c_percentage% \n";
+                    $eval .= "It is the extent to which individuals are able to manage their life and control the negative consequences before getting worse.\n\n";
 
                     // Compute for Ownership percentage
                     $o_percentage = $o_total / 40 * 100;
                     $eval .= "Ownership: $o_percentage% \n";
+                    $eval .= "It is the extent to which an individual is accountable for their actions and is willing to take responsibilities to improve the situation, regardless of their formal responsibilities.\n\n";
 
                     // Compute for Reach percentage
                     $r_percentage = $r_total / 25 * 100;
                     $eval .= "Reach: $r_percentage% \n";
+                    $eval .= "It is the extent to which the challenges an individual face extrapolate to other aspects of their life. It measures how much capable an individual is able to resist such challenges from affecting other necessities such as their studies or family life.\n\n";
 
                     // Compute for Endurance percentage
                     $e_percentage = $e_total / 10 * 100;
                     $eval .= "Endurance: $e_percentage% \n";
+                    $eval .= "It is the extent to which an individual is capable of tolerating pain and yet be optimistic of future and believing that something positive waits for them in the opposite side of all adversities.\n\n";
 
                     $sql = "UPDATE evaluation SET is_complete = '1', validity = '1', evaluation_result = '$eval' WHERE id = '$evaluation_id'";
                     if (mysqli_query($conn, $sql)) {
+                        if (isset($_SESSION['responses'])) {
+                            unset($_SESSION['responses']);
+                        }
                         header("location: $rootURL/student/result.php?id=$evaluation_id");
                     } else {
                         echo $conn->error;
