@@ -3,12 +3,11 @@ include '../config.php';
 session_start();
 
 if (isset($_POST['submit'])) {
-    if (isset($_POST['username']) && isset($_POST['password'])) {
+    if (isset($_POST['username'])) {
         $conn = mysqli_connect($host, $username, $password, $database);
 
         if ($conn) {
             $username = $_POST['username'];
-            $password = md5($_POST['password']);
 
             $sql = "SELECT * FROM users WHERE username = '$username'";
 
@@ -16,38 +15,23 @@ if (isset($_POST['submit'])) {
 
             if (mysqli_num_rows($res) != 0) {
                 $user = mysqli_fetch_assoc($res);
+                $user_id = $user['id'];
+                $reset_key = substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 6);
 
-                if ($username == $user['username'] && $password == $user['password']) {
-                    if (mysqli_query($conn, $sql)) {
-                        $role = $user['role'];
-                        $first_name = $user['first_name'];
-                        $last_name = $user['last_name'];
+                // Next, prepare and execute the SQL update statement
+                $query = "UPDATE users SET reset_password = true, reset_key = '" . $reset_key . "' WHERE id = '" . $user_id . "'";
+                $result = mysqli_query($conn, $query);
 
-                        setcookie("username", $username, time() + (86400), "/"); // 86400 = 1 day
-                        setcookie("role", $role, time() + (86400), "/"); // 86400 = 1 day
-                        setcookie("first_name", $first_name, time() + (86400), "/"); // 86400 = 1 day
-                        setcookie("last_name", $last_name, time() + (86400), "/"); // 86400 = 1 day
-                        setcookie("id", $user['id'], time() + (86400), "/"); // 86400 = 1 day
-                        setcookie("logged_in", true, time() + (86400), "/"); // 86400 = 1 day
-
-                        if ($role == "admin") {
-                            header("location: $rootURL/admin/");
-                        } else if ($role == "faculty") {
-                            header("location: $rootURL/faculty/student_management.php");
-                        } else {
-                            header("location: $rootURL/student/");
-                        }
-                    } else {
-                        $_SESSION['msg_type'] = 'danger';
-                        $_SESSION['flash_message'] = 'Login Failed';
-                    }
-                } else {
+                if (!$result) {
                     $_SESSION['msg_type'] = 'danger';
-                    $_SESSION['flash_message'] = 'Login Failed';
+                    $_SESSION['flash_message'] = 'Something went wrong';
+                } else {
+                    $_SESSION['msg_type'] = 'success';
+                    $_SESSION['flash_message'] = 'Password Reset Request has been sent. Contact a faculty member to get your reset key';
                 }
             } else {
                 $_SESSION['msg_type'] = 'danger';
-                $_SESSION['flash_message'] = 'Username/Password is Incorrect';
+                $_SESSION['flash_message'] = 'Incorrect Username';
             }
         } else {
             $_SESSION['msg_type'] = 'danger';
@@ -99,26 +83,16 @@ if (isset($_POST['submit'])) {
                 ?>
                 <div class="card border-0">
                     <div class="card-body text-center form-signin">
-                        <h1 class="h3 mb-3 fw-normal">User Login</h1>
-
+                        <h1 class="h3 mb-3 fw-normal">Request for Password Reset</h1>
                         <form method="POST">
                             <div class="form-floating mb-3">
                                 <input type="text" name="username" class="form-control" required>
                                 <label for="floatingInput">Username / TUPV ID</label>
                             </div>
-                            <div class="form-floating mb-3 input-group">
-                                <input type="password" name="password" class="form-control" id="password" required>
-                                <span class="input-group-text" onclick="togglePasswordVisibility()">
-                                    <i class="bi bi-eye-slash" id="icon"></i>
-                                </span>
-                                <label for="password">Password</label>
-                            </div>
-                            <div class="my-3">
-                                <a href="forgot_password.php">Forgot your password?</a>
-                            </div>
-                            <button class="w-100 btn btn-lg btn-primary-brand btn-dark" type="submit" name="submit">Login</button>
+                            <button class="w-100 btn btn-lg btn-primary-brand btn-dark" type="submit" name="submit">Submit Request</button>
+                            <a href="reset_password.php" class="w-100 btn btn-md btn-success btn-outline mt-2" type="submit" name="submit">I already have my Reset Key</a>
                             <div class="mt-3">
-                                Don't have an account? <a href="register.php">Register Here.</a>
+                                Remember your password? <a href="index.php">Back to Login</a>
                             </div>
                         </form>
                     </div>

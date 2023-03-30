@@ -22,6 +22,11 @@
                 Student Management
             </a>
         </li>
+        <li class="nav-item">
+            <a href="<?= $rootURL ?>/faculty/password_management.php" class="nav-link text-white" aria-current="page">
+                Password Reset Requests
+            </a>
+        </li>
     </ul>
     <hr>
     <div class="dropdown">
