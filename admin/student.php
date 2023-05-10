@@ -21,12 +21,12 @@ if (isset($_GET['id'])) {
         $sql = "DELETE FROM users WHERE id = '$id'";
 
         mysqli_query($conn, $sql);
-        header("location: $rootURL/admin/student_management.php");
+        header("location: $rootURL/admin/masterlist.php");
     } else {
         echo "Couldn't connect to database.";
     }
 } else {
-    header("location: $rootURL/admin/student_management.php");
+    header("location: $rootURL/admin/masterlist.php");
 }
 include('../logout.php');
 

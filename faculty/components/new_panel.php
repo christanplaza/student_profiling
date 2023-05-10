@@ -1,5 +1,5 @@
 <div class="d-flex flex-column flex-shrink-0 p-3 text-bg-dark min-vh-100">
-    <a href="<?= $rootURL ?>/admin/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+    <a href="<?= $rootURL ?>/faculty/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
         <span class="fs-4"></span>
         <button class="btn btn-dark btn-lg text-start d-flex align-items-center" style="background-color: #00a8e8;">
             <?php if (isset($deep) && $deep) : ?>

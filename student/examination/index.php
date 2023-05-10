@@ -186,7 +186,14 @@ if ($conn) {
 
             $result = "Your IQ According to this assessment is: " . $iq;
 
-            $sql = "UPDATE evaluation SET is_complete = '1', validity = '1', evaluation_result = '$result' WHERE id = '$evaluation_id'";
+            $data = array(
+                'type' => 'iq',
+                'value' => $iq
+            );
+
+            $evaluation_json = json_encode($data);
+
+            $sql = "UPDATE evaluation SET is_complete = '1', validity = '1', evaluation_result = '$result', evaluation_json = '$evaluation_json' WHERE id = '$evaluation_id'";
             if (mysqli_query($conn, $sql)) {
                 header("location: $rootURL/student/result.php?id=$evaluation_id");
             } else {
@@ -354,6 +361,14 @@ if ($conn) {
                         "Visual" => "People with high spatial intelligence are generally very creative and usually have a vivid imagination, high artistic ability and excellent spatial reasoning. These people are often referred to as ''picture smart'' and can be found in professions such as architecture, design and map reading.",
                     );
 
+                    
+                    $data = array(
+                        'type' => 'rank',
+                        'value' => $results
+                    );
+
+                    $evaluation_json = json_encode($data);
+
                     $keys = array_keys($results);
 
                     $eval = "Your Multiple Intelligence is ranked as follows, from top to bottom. \n";
@@ -362,7 +377,7 @@ if ($conn) {
                         $eval .= $descriptions[$key] . "\n\n";
                     }
 
-                    $sql = "UPDATE evaluation SET is_complete = '1', validity = '1', evaluation_result = '$eval' WHERE id = '$evaluation_id'";
+                    $sql = "UPDATE evaluation SET is_complete = '1', validity = '1', evaluation_result = '$eval', evaluation_json = '$evaluation_json' WHERE id = '$evaluation_id'";
                     if (mysqli_query($conn, $sql)) {
                         if (isset($_SESSION['responses'])) {
                             unset($_SESSION['responses']);
@@ -456,7 +471,15 @@ if ($conn) {
                         $count++;
                     }
 
-                    $sql = "UPDATE evaluation SET is_complete = '1', validity = '1', evaluation_result = '$eval' WHERE id = '$evaluation_id'";
+                    
+                    $data = array(
+                        'type' => 'eq',
+                        'value' => $complete_array
+                    );
+
+                    $evaluation_json = json_encode($data);
+
+                    $sql = "UPDATE evaluation SET is_complete = '1', validity = '1', evaluation_result = '$eval', evaluation_json = '$evaluation_json' WHERE id = '$evaluation_id'";
                     if (mysqli_query($conn, $sql)) {
                         if (isset($_SESSION['responses'])) {
                             unset($_SESSION['responses']);
@@ -557,7 +580,22 @@ if ($conn) {
                     $eval .= "Endurance: $e_percentage% \n";
                     $eval .= "It is the extent to which an individual is capable of tolerating pain and yet be optimistic of future and believing that something positive waits for them in the opposite side of all adversities.\n\n";
 
-                    $sql = "UPDATE evaluation SET is_complete = '1', validity = '1', evaluation_result = '$eval' WHERE id = '$evaluation_id'";
+                    $results = array(
+                        "Control" => $c_percentage,
+                        "Ownership" => $o_percentage,
+                        "Reach" => $r_percentage,
+                        "Endurance" => $e_percentage
+                    );
+
+                    
+                    $data = array(
+                        'type' => 'aq',
+                        'value' => $results
+                    );
+
+                    $evaluation_json = json_encode($data);
+
+                    $sql = "UPDATE evaluation SET is_complete = '1', validity = '1', evaluation_result = '$eval', evaluation_json = '$evaluation_json' WHERE id = '$evaluation_id'";
                     if (mysqli_query($conn, $sql)) {
                         if (isset($_SESSION['responses'])) {
                             unset($_SESSION['responses']);
