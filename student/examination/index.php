@@ -558,26 +558,35 @@ if ($conn) {
                         $score = "Very High";
                     }
 
-                    $eval = "Your Adversity Response Profile is: " . $score . " \n";
+                    $eval = "The student''s Adversity Quotient Score is $final_arp_score, this means that the student has a $score Adversity Quotient \n\n";
+
+                    $aqCategories = require 'aq_categories.php';
+
+                    $eval .= $aqCategories[$score]["description"] . "\n\n";
+
+                    $eval .= "The student''s scores (over 100) in the four dimensions of Adversity Quotient are as follows: \n\n";
+
                     // Compute for Control percentage
                     $c_percentage = $c_total / 25 * 100;
-                    $eval .= "Control: $c_percentage% \n";
-                    $eval .= "It is the extent to which individuals are able to manage their life and control the negative consequences before getting worse.\n\n";
+                    $eval .= "Control = $c_percentage% \n";
 
                     // Compute for Ownership percentage
                     $o_percentage = $o_total / 40 * 100;
-                    $eval .= "Ownership: $o_percentage% \n";
-                    $eval .= "It is the extent to which an individual is accountable for their actions and is willing to take responsibilities to improve the situation, regardless of their formal responsibilities.\n\n";
+                    $eval .= "Ownership =  $o_percentage% \n";
 
                     // Compute for Reach percentage
                     $r_percentage = $r_total / 25 * 100;
-                    $eval .= "Reach: $r_percentage% \n";
-                    $eval .= "It is the extent to which the challenges an individual face extrapolate to other aspects of their life. It measures how much capable an individual is able to resist such challenges from affecting other necessities such as their studies or family life.\n\n";
+                    $eval .= "Reach = $r_percentage% \n";
 
                     // Compute for Endurance percentage
                     $e_percentage = $e_total / 10 * 100;
-                    $eval .= "Endurance: $e_percentage% \n";
-                    $eval .= "It is the extent to which an individual is capable of tolerating pain and yet be optimistic of future and believing that something positive waits for them in the opposite side of all adversities.\n\n";
+                    $eval .= "Endurance = $e_percentage% \n\n";
+
+                    $eval .= "Implications of the four dimensions of Adversity Quotient:\n\n";
+                    $eval .= "Control - It is the extent to which individuals are able to manage their life and control the negative consequences before getting worse.\n\n";
+                    $eval .= "Ownership - It is the extent to which an individual is accountable for their actions and is willing to take responsibilities to improve the situation, regardless of their formal responsibilities.\n\n";
+                    $eval .= "Reach - It is the extent to which the challenges an individual face extrapolate to other aspects of their life. It measures how much capable an individual is able to resist such challenges from affecting other necessities such as their studies or family life.\n\n";
+                    $eval .= "Endurance - It is the extent to which an individual is capable of tolerating pain and yet be optimistic of future and believing that something positive waits for them in the opposite side of all adversities.\n\n";
 
                     $results = array(
                         "Control" => $c_percentage,
