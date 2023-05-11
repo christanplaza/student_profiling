@@ -361,7 +361,7 @@ if ($conn) {
                         "Visual" => "People with high spatial intelligence are generally very creative and usually have a vivid imagination, high artistic ability and excellent spatial reasoning. These people are often referred to as ''picture smart'' and can be found in professions such as architecture, design and map reading.",
                     );
 
-                    
+
                     $data = array(
                         'type' => 'rank',
                         'value' => $results
@@ -372,9 +372,11 @@ if ($conn) {
                     $keys = array_keys($results);
 
                     $eval = "Your Multiple Intelligence is ranked as follows, from top to bottom. \n";
+                    $i = 1;
                     foreach ($results as $key => $result) {
-                        $eval .= $key . ": " . $result . "\n";
+                        $eval .= $i + "." + $key . "\n";
                         $eval .= $descriptions[$key] . "\n\n";
+                        $i++;
                     }
 
                     $sql = "UPDATE evaluation SET is_complete = '1', validity = '1', evaluation_result = '$eval', evaluation_json = '$evaluation_json' WHERE id = '$evaluation_id'";
@@ -466,12 +468,12 @@ if ($conn) {
                         } else if ($item >= 10 && $item <= 17) {
                             $text .= "Development Priority";
                         }
-                        $eval .= $key . ": " . $item . " ($text)\n";
+                        $eval .= $key . ": " . $text . " (Score = $item / 50)\n";
                         $eval .= $results_array[$count] . "\n\n";
                         $count++;
                     }
 
-                    
+
                     $data = array(
                         'type' => 'eq',
                         'value' => $complete_array
@@ -587,7 +589,7 @@ if ($conn) {
                         "Endurance" => $e_percentage
                     );
 
-                    
+
                     $data = array(
                         'type' => 'aq',
                         'value' => $results
