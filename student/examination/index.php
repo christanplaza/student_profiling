@@ -368,10 +368,10 @@ if ($conn) {
 
                     $keys = array_keys($results);
 
-                    $eval = "Your Multiple Intelligence is ranked as follows, from top to bottom. \n";
+                    $eval = "Your Multiple Intelligence is ranked as follows, from top to bottom. \n\n";
                     $i = 1;
                     foreach ($results as $key => $result) {
-                        $eval .= $i + "." + $key . "\n";
+                        $eval .= $i . ". " . $key . "\n";
                         $eval .= $descriptions[$key] . "\n\n";
                         $i++;
                     }
