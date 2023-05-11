@@ -120,75 +120,72 @@ if ($conn) {
                 $index++;
             }
 
-            echo $totalScore;
+            $category_result = "";
 
-            $iq = "";
+            // Define the score ranges and raw score ranges as arrays
+            $scoreRanges = array(
+                "130 – above",
+                "120 – 129",
+                "110 – 119",
+                "90 – 109",
+                "80 – 89",
+                "70 – 79",
+                "69 – below"
+            );
 
-            // Evaluation of Score
+            $rawScoreRanges = array(
+                array(21, 25),
+                array(19, 20),
+                array(16, 18),
+                array(10, 15),
+                array(8, 9),
+                array(5, 7),
+                array(4, -1)
+            );
 
-            switch ($totalScore) {
-                case 6:
-                    $iq = "77";
+            $category = array(
+                "Very Superior",
+                "Superior",
+                "High Average",
+                "Average",
+                "Low Average",
+                "Borderline",
+                "Extremely Low"
+            );
+
+            // Loop through the raw score ranges and check if the total score falls within any of them
+            for ($i = 0; $i < count($rawScoreRanges); $i++) {
+                $rawScoreRange = $rawScoreRanges[$i];
+                if ($totalScore >= $rawScoreRange[0] && ($totalScore <= $rawScoreRange[1] || $rawScoreRange[1] == -1)) {
+                    // If the total score falls within the raw score range, assign the corresponding category and score range to variables
+                    $category_result = $category[$i];
+                    $iq = $scoreRanges[$i];
                     break;
-                case 7:
-                    $iq = "79";
-                    break;
-                case 8:
-                    $iq = "84";
-                    break;
-                case 9:
-                    $iq = "88";
-                    break;
-                case 10:
-                    $iq = "92";
-                    break;
-                case 11:
-                    $iq = "94";
-                    break;
-                case 12:
-                    $iq = "98";
-                    break;
-                case 13:
-                    $iq = "101";
-                    break;
-                case 14:
-                    $iq = "104";
-                    break;
-                case 15:
-                    $iq = "108";
-                    break;
-                case 16:
-                    $iq = "111";
-                    break;
-                case 17:
-                    $iq = "114";
-                    break;
-                case 18:
-                    $iq = "119";
-                    break;
-                case 19:
-                    $iq = "123";
-                    break;
-                case 20:
-                    $iq = "125";
-                    break;
-                case 21:
-                    $iq = "132";
-                    break;
-                default:
-                    if ($totalScore <= 5) {
-                        $iq = "<= 73";
-                    } else if ($totalScore >= 22) {
-                        $iq = ">= 139";
-                    }
-                    break;
+                }
             }
 
-            $result = "Your IQ According to this assessment is: " . $iq;
+            // Output the result and IQ variables
+            echo "Result: " . $category_result . "<br>";
+            echo "IQ: " . $iq;
+
+            $iqCategories = require 'iq_categories.php';
+
+            $advantages = $iqCategories[$category_result]["Advantages"];
+            $disadvantages = $iqCategories[$category_result]["Disadvantages"];
+
+            $result = "The student''s Intelligence Quotient score is $iq which corresponds to (a/an) $category_result IQ \n\n";
+            $result .= "The advantages and disadvantages of having this IQ score are as follows: \n\n";
+            $result .= "Advantages of having (a/an) $category_result IQ may include: \n";
+            $result .= $advantages . " \n\n";
+            $result .= "Disadvantages of having (a/an) $category_result IQ may include: \n";
+            $result .= $disadvantages . " \n\n";
 
             $data = array(
                 'type' => 'iq',
-                'value' => $iq
+                'value' => array(
+                    'category' => $category_result,
+                    'iq' => $iq
+                )
             );
 
             $evaluation_json = json_encode($data);
