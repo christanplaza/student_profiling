@@ -447,11 +447,11 @@ if ($conn) {
 
                     $complete_array = array("Self Awareness" => $self_awareness_total, "Managing Emotions" => $managing_emotions_total, "Motivating Oneself" => $motivating_oneself_total, "Empathy" => $empathy_total, "Social Skills" => $social_skill_total);
                     $results_array = array(
-                        "Self-Awareness is the ability to understand your own emotions and their effects on your performance. If this is your strength, it means that you know what you are feeling, why you''re feeling it and how it helps or hurts what you are trying to do. You sense how others see you and so align your self-image with a larger reality.",
-                        "The ability to manage emotions effectively is a crucial part of emotional quotient. Managing your emotions helps you make better decisions, big or small. If this is your strength, it means that you are aware  of triggers, and you can gain insights on how to respond in constructive ways.",
-                        "Self-motivation includes your personal drive to improve and achieve, commitment to your goals, initiative, or readiness to act on opportunities, and optimism and resilience. If this is your strength, it means you have ability to take initiative and action to pursue goals and complete tasks. You have an inner drive to take action, to create and to achieve. It''s what pushes you to keep going on tasks, especially those you''re pursuing because you want to, not because someone told you to.",
-                        "Empathy is an important element of Emotional Quotient (EQ). It can be described simply as “to put yourself in another person''s shoes.” By doing so, you become more aware of the feelings and emotions of other people. If this is your strength, it means that you are a very understanding person by being able to see the world from another person''s viewpoint.",
-                        "People with high social skills are skilled in communication, empathy, and conflict resolution. They are able to express their thoughts and feelings clearly, listen actively to others, and work collaboratively to achieve common goals. They are also able to recognize and respond appropriately to the emotions of others, which allows them to build rapport and establish trust."
+                        "Self-awareness is the ability for an individual to understand their own emotions and how they impact their performance. If this is a person''s strength, it indicates that they are able to recognize their own emotions, the reasons behind those emotions, and how they can positively or negatively affect their actions. They also have the ability to perceive how others perceive them and can adjust their self-image to align with the perceptions of others.",
+                        "The ability to effectively manage emotions is a critical aspect of emotional intelligence. If this is someone''s strength, it implies that they possess the capacity to regulate their emotions, which helps them to make better decisions regardless of the situation''s magnitude. Such individuals are aware of emotional triggers and can gain insights on how to respond in a constructive and positive manner.",
+                        "Self-motivation is the personal drive to improve and achieve, a commitment to goals, initiative, readiness to act on opportunities, and optimism and resilience. If this is someone''s strength, it indicates that they possess the ability to take initiative and action in pursuit of their objectives and completion of tasks. They have an inherent drive to create, achieve and take action, especially when they are pursuing something out of their own will rather than being directed by someone else. This internal drive is what keeps them going on tasks, even in challenging circumstances.",
+                        "Empathy is a crucial component of Emotional Quotient (EQ) that involves the ability to place oneself in another person''s shoes to understand their perspective. By doing so, individuals become more conscious of other people''s emotions and feelings. If this is someone''s strength, it indicates that they possess a great understanding of others, as they have the ability to view the world from different people''s viewpoints and empathize with their situation.",
+                        "People with high social skills are proficient in communication, empathy, and conflict resolution. They are able to express their thoughts and feelings clearly, listen actively to others, and work collaboratively to achieve common goals. They are also able to recognize and respond appropriately to the emotions of others, which allows them to build rapport and establish trust."
                     );
 
                     $eval = "Your Emotional Quotient results are as follows: \n";
@@ -466,9 +466,21 @@ if ($conn) {
                             $text .= "Development Priority";
                         }
                         $eval .= $key . ": " . $text . " (Score = $item / 50)\n";
-                        $eval .= $results_array[$count] . "\n\n";
                         $count++;
                     }
+
+                    $eval .= "\n";
+                    $eval .= "Implications of the five EQ competencies: \n";
+                    $eval .= "Self-Awareness: \n";
+                    $eval .= "$results_array[0]\n\n";
+                    $eval .= "Managing Emotions: \n";
+                    $eval .= "$results_array[1]\n\n";
+                    $eval .= "Motivating Oneself: \n";
+                    $eval .= "$results_array[2]\n\n";
+                    $eval .= "Empathy: \n";
+                    $eval .= "$results_array[3]\n\n";
+                    $eval .= "Social Skills: \n";
+                    $eval .= "$results_array[4]\n\n";
 
 
                     $data = array(
