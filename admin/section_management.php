@@ -361,6 +361,9 @@ include('../logout.php');
                         </div>
 
                         <?php if ($setValues) : ?>
+                            <div class="col-12 mb-4">
+                                <p class="display-6 fw-bold">Adversity Quotient</p>
+                            </div>
                             <div class="col-6">
                                 <canvas id="aqChart"></canvas>
                             </div>
@@ -410,6 +413,9 @@ include('../logout.php');
                                 </p>
                                 <p><?= $paragraph ?></p>
                             </div>
+                            <div class="col-12 my-4">
+                                <p class="display-6 fw-bold">Emotional Quotient</p>
+                            </div>
                             <div class="col-12 mt-4">
                                 <canvas id="eqChart"></canvas>
                             </div>
@@ -422,6 +428,9 @@ include('../logout.php');
                             Development Priority = " . ($developmentPriorityCount > 0 ? $developmentPriorityEQ . " with " . $developmentPriorityCount . " students" : "-");
                                 ?>
                                 <p><?= $eq_description ?></p>
+                            </div>
+                            <div class="col-12 my-4">
+                                <p class="display-6 fw-bold">Intelligence Quotient</p>
                             </div>
                             <div class="col-12 mt-4">
                                 <canvas id="iqChart"></canvas>
@@ -456,6 +465,9 @@ include('../logout.php');
 
                                 echo $evaluationText;
                                 ?>
+                            </div>
+                            <div class="col-12 my-4">
+                                <p class="display-6 fw-bold">Multiple Intelligence</p>
                             </div>
                             <div class="col-12 mt-4">
                                 <canvas id="rankChart"></canvas>
