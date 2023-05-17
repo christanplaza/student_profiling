@@ -27,6 +27,11 @@
                 Masterlist
             </a>
         </li>
+        <li>
+            <a href="<?= $rootURL ?>/admin/section_management.php" class="nav-link text-white">
+                Section Management
+            </a>
+        </li>
     </ul>
     <hr>
     <div class="dropdown">

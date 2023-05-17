@@ -13,6 +13,7 @@ $courses = array(
 );
 $yearlevel = array(1 => "1st Year", 2 => "2nd Year", 3 => "3rd Year", 4 => "4th Year");
 $sections = array("A", "B", "C", "D", "E", "F", "G");
+$setValues = false;
 
 // Check if the form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "GET") {
@@ -22,6 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
     $selectedSection = $_GET["section"] ?? null;
 
     if (isset($selectedCourse) && isset($selectedYearLevel) && isset($selectedSection)) {
+        $setValues = true;
         $sql = "SELECT evaluation.*
         FROM evaluation
         JOIN users ON evaluation.student_id = users.id
@@ -358,353 +360,355 @@ include('../logout.php');
                             </form>
                         </div>
 
-                        <div class="col-6">
-                            <canvas id="aqChart"></canvas>
-                        </div>
-                        <div class="col-6">
-                            <canvas id="aqChartDimensions"></canvas>
-                        </div>
-                        <?php
-                        //AQ Evaluation computations
-                        $total_aq_eval_count = count($aq_updated_values);
-                        // Create an labeled array of average scores
-                        $labelled_aq_averages = ["Control" => $avgControl, "Ownership" => $avgOwnership, "Reach" => $avgReach, "Endurance" => $avgEndurance];
-                        arsort($labelled_aq_averages);
-
-                        // Get the AQ dimension with the highest average score
-                        $highestKey = key($labelled_aq_averages);
-                        $highestValue = number_format(current($labelled_aq_averages), 2);
-                        next($labelled_aq_averages);
-
-                        // Get the AQ dimensions and their average scores
-                        $otherDimensions = [];
-                        while ($key = key($labelled_aq_averages)) {
-                            $otherDimensions[$key] = number_format(current($labelled_aq_averages), 2);
-                            next($labelled_aq_averages);
-                        }
-
-                        // Construct the paragraph dynamically
-                        $paragraph = "<p>FOR THE SECOND GRAPH: The Adversity Quotient dimension that received the highest average score from the students is $highestKey with $highestValue%, followed by";
-                        foreach ($otherDimensions as $key => $value) {
-                            $paragraph .= " $key with $value%";
-                            if (next($otherDimensions)) {
-                                $paragraph .= " and";
-                            }
-                        }
-                        $paragraph .= ", respectively.</p>";
-
-
-                        $maxAverage = max($dimensionsCount);
-                        $minAverage = min($dimensionsCount);
-
-                        $keyMaxAverage = array_keys($dimensionsCount, $maxAverage)[0];
-                        $keyMinAverage = array_keys($dimensionsCount, $minAverage)[0];
-                        ?>
-                        <div class="col-12 mt-4">
-                            <p>
-                                FOR THE FIRST GRAPH: Among the <?= $total_aq_eval_count ?> total number of assessment takers from the class of <?= $yearlevel[$selectedYearLevel] ?> BS in <?= $courses[$selectedCourse] ?> section <?= $selectedSection ?>,
-                                majority of the class (<?= $dimensionsCount[$keyMaxAverage] ?> students) received a <?= $keyMaxAverage ?> Adversity Quotient grade classification. On the contrary, the least number of students (<?= $dimensionsCount[$keyMinAverage] ?> in total) received a <?= $keyMinAverage ?> Adversity Quotient grade classification.
-                            </p>
-                            <p><?= $paragraph ?></p>
-                        </div>
-                        <div class="col-12 mt-4">
-                            <canvas id="eqChart"></canvas>
-                        </div>
-                        <div class="col-12 mt-4">
+                        <?php if ($setValues) : ?>
+                            <div class="col-6">
+                                <canvas id="aqChart"></canvas>
+                            </div>
+                            <div class="col-6">
+                                <canvas id="aqChartDimensions"></canvas>
+                            </div>
                             <?php
-                            // Generate the descriptive results template with the populated data
-                            $eq_description = "In the $yearlevel[$selectedYearLevel] class of BS in $courses[$selectedCourse] section $selectedSection, the competencies in which more students think it is their strength, or one that needs attention, or a development priority are as follows:<br/><br/>
+                            //AQ Evaluation computations
+                            $total_aq_eval_count = count($aq_updated_values);
+                            // Create an labeled array of average scores
+                            $labelled_aq_averages = ["Control" => $avgControl, "Ownership" => $avgOwnership, "Reach" => $avgReach, "Endurance" => $avgEndurance];
+                            arsort($labelled_aq_averages);
+
+                            // Get the AQ dimension with the highest average score
+                            $highestKey = key($labelled_aq_averages);
+                            $highestValue = number_format(current($labelled_aq_averages), 2);
+                            next($labelled_aq_averages);
+
+                            // Get the AQ dimensions and their average scores
+                            $otherDimensions = [];
+                            while ($key = key($labelled_aq_averages)) {
+                                $otherDimensions[$key] = number_format(current($labelled_aq_averages), 2);
+                                next($labelled_aq_averages);
+                            }
+
+                            // Construct the paragraph dynamically
+                            $paragraph = "<p>FOR THE SECOND GRAPH: The Adversity Quotient dimension that received the highest average score from the students is $highestKey with $highestValue%, followed by";
+                            foreach ($otherDimensions as $key => $value) {
+                                $paragraph .= " $key with $value%";
+                                if (next($otherDimensions)) {
+                                    $paragraph .= " and";
+                                }
+                            }
+                            $paragraph .= ", respectively.</p>";
+
+
+                            $maxAverage = max($dimensionsCount);
+                            $minAverage = min($dimensionsCount);
+
+                            $keyMaxAverage = array_keys($dimensionsCount, $maxAverage)[0];
+                            $keyMinAverage = array_keys($dimensionsCount, $minAverage)[0];
+                            ?>
+                            <div class="col-12 mt-4">
+                                <p>
+                                    FOR THE FIRST GRAPH: Among the <?= $total_aq_eval_count ?> total number of assessment takers from the class of <?= $yearlevel[$selectedYearLevel] ?> BS in <?= $courses[$selectedCourse] ?> section <?= $selectedSection ?>,
+                                    majority of the class (<?= $dimensionsCount[$keyMaxAverage] ?> students) received a <?= $keyMaxAverage ?> Adversity Quotient grade classification. On the contrary, the least number of students (<?= $dimensionsCount[$keyMinAverage] ?> in total) received a <?= $keyMinAverage ?> Adversity Quotient grade classification.
+                                </p>
+                                <p><?= $paragraph ?></p>
+                            </div>
+                            <div class="col-12 mt-4">
+                                <canvas id="eqChart"></canvas>
+                            </div>
+                            <div class="col-12 mt-4">
+                                <?php
+                                // Generate the descriptive results template with the populated data
+                                $eq_description = "In the $yearlevel[$selectedYearLevel] class of BS in $courses[$selectedCourse] section $selectedSection, the competencies in which more students think it is their strength, or one that needs attention, or a development priority are as follows:<br/><br/>
                             Strength = " . ($strengthCount > 0 ? $strengthEQ . " with " . $strengthCount . " students" : "-") . "<br/>
                             Needs Attention = " . ($needsAttentionCount > 0 ? $needsAttentionEQ . " with " . $needsAttentionCount . " students" : "-") . "<br/>
                             Development Priority = " . ($developmentPriorityCount > 0 ? $developmentPriorityEQ . " with " . $developmentPriorityCount . " students" : "-");
-                            ?>
-                            <p><?= $eq_description ?></p>
-                        </div>
-                        <div class="col-12 mt-4">
-                            <canvas id="iqChart"></canvas>
-                        </div>
-                        <div class="col-12 mt-4">
-                            <?php
-                            // Calculate the total number of students
-                            $totalStudents = array_sum($iqCounts);
-                            $sortedIqCounts = $iqCounts;
-                            arsort($sortedIqCounts);
-
-                            // Generate the evaluation text based on the IQ result counts
-                            $evaluationText = "As shown in the graph, most students ($totalStudents in total) from $yearlevel[$selectedYearLevel] BS $courses[$selectedCourse] section $selectedSection have a/an ";
-
-                            // Get the IQ category with the highest count
-                            $maxCount = max($sortedIqCounts);
-                            $maxIndex = array_search($maxCount, $sortedIqCounts);
-
-                            $evaluationText .= $maxIndex . " IQ score. This is followed by ";
-
-                            // // Generate the remaining parts of the evaluation text
-                            $remainingText = "";
-                            foreach ($sortedIqCounts as $index => $count) {
-                                $category = $index;
-                                $remainingText .= $category . " IQ scores with $count students, ";
-                                if ($index < count($sortedIqCounts) - 1) {
-                                    $remainingText .= " and ";
-                                }
-                            }
-
-                            $evaluationText .= $remainingText;
-
-                            echo $evaluationText;
-                            ?>
-                        </div>
-                        <div class="col-12 mt-4">
-                            <canvas id="rankChart"></canvas>
-                        </div>
-                        <div class="col-12 mt-4">
-                            <p>
+                                ?>
+                                <p><?= $eq_description ?></p>
+                            </div>
+                            <div class="col-12 mt-4">
+                                <canvas id="iqChart"></canvas>
+                            </div>
+                            <div class="col-12 mt-4">
                                 <?php
+                                // Calculate the total number of students
+                                $totalStudents = array_sum($iqCounts);
+                                $sortedIqCounts = $iqCounts;
+                                arsort($sortedIqCounts);
+
+                                // Generate the evaluation text based on the IQ result counts
+                                $evaluationText = "As shown in the graph, most students ($totalStudents in total) from $yearlevel[$selectedYearLevel] BS $courses[$selectedCourse] section $selectedSection have a/an ";
+
+                                // Get the IQ category with the highest count
+                                $maxCount = max($sortedIqCounts);
+                                $maxIndex = array_search($maxCount, $sortedIqCounts);
+
+                                $evaluationText .= $maxIndex . " IQ score. This is followed by ";
+
+                                // // Generate the remaining parts of the evaluation text
+                                $remainingText = "";
+                                foreach ($sortedIqCounts as $index => $count) {
+                                    $category = $index;
+                                    $remainingText .= $category . " IQ scores with $count students, ";
+                                    if ($index < count($sortedIqCounts) - 1) {
+                                        $remainingText .= " and ";
+                                    }
+                                }
+
+                                $evaluationText .= $remainingText;
+
+                                echo $evaluationText;
+                                ?>
+                            </div>
+                            <div class="col-12 mt-4">
+                                <canvas id="rankChart"></canvas>
+                            </div>
+                            <div class="col-12 mt-4">
+                                <p>
+                                    <?php
 
 
-                                // Initialize arrays to store the strengths and weaknesses counts for each intelligence
-                                $strengths = [];
-                                $weaknesses = [];
+                                    // Initialize arrays to store the strengths and weaknesses counts for each intelligence
+                                    $strengths = [];
+                                    $weaknesses = [];
 
-                                // Iterate through the Multiple Intelligences
-                                foreach ($intelligences as $intelligence) {
-                                    $intelligenceStrengths = 0;
-                                    $intelligenceWeaknesses = 0;
+                                    // Iterate through the Multiple Intelligences
+                                    foreach ($intelligences as $intelligence) {
+                                        $intelligenceStrengths = 0;
+                                        $intelligenceWeaknesses = 0;
 
-                                    // Iterate through the rank values array
-                                    foreach ($rank_values as $rank) {
-                                        $intelligenceRank = isset($rank[$intelligence]) ? $rank[$intelligence] : 0;
-                                        $minRank = min($rank);
-                                        $maxRank = max($rank);
+                                        // Iterate through the rank values array
+                                        foreach ($rank_values as $rank) {
+                                            $intelligenceRank = isset($rank[$intelligence]) ? $rank[$intelligence] : 0;
+                                            $minRank = min($rank);
+                                            $maxRank = max($rank);
 
-                                        if ($intelligenceRank === $minRank) {
-                                            $intelligenceStrengths++;
+                                            if ($intelligenceRank === $minRank) {
+                                                $intelligenceStrengths++;
+                                            }
+
+                                            if ($intelligenceRank === $maxRank) {
+                                                $intelligenceWeaknesses++;
+                                            }
                                         }
 
-                                        if ($intelligenceRank === $maxRank) {
-                                            $intelligenceWeaknesses++;
-                                        }
+                                        $strengths[$intelligence] = $intelligenceStrengths;
+                                        $weaknesses[$intelligence] = $intelligenceWeaknesses;
                                     }
 
-                                    $strengths[$intelligence] = $intelligenceStrengths;
-                                    $weaknesses[$intelligence] = $intelligenceWeaknesses;
-                                }
+                                    // Sort the strengths and weaknesses array in descending order
+                                    arsort($strengths);
+                                    arsort($weaknesses);
 
-                                // Sort the strengths and weaknesses array in descending order
-                                arsort($strengths);
-                                arsort($weaknesses);
+                                    // Get the top three strengths and weaknesses intelligences
+                                    $topStrengths = array_slice(array_keys($strengths), 0, 3);
+                                    $topWeaknesses = array_slice(array_keys($weaknesses), 0, 3);
 
-                                // Get the top three strengths and weaknesses intelligences
-                                $topStrengths = array_slice(array_keys($strengths), 0, 3);
-                                $topWeaknesses = array_slice(array_keys($weaknesses), 0, 3);
+                                    // Generate the text evaluation
+                                    $evaluation = "The graph shows that in the $yearlevel[$selectedYearLevel] class of $courses[$selectedCourse] section $selectedSection, the top three intelligences of MI theory with the highest number of students that identified them as their strengths are as follows: " . implode(", ", $topStrengths) . ".\nOn the other hand, the top three intelligences of MI theory with the highest number of students that identified them as their weaknesses are as follows: " . implode(", ", $topWeaknesses) . ".";
 
-                                // Generate the text evaluation
-                                $evaluation = "The graph shows that in the $yearlevel[$selectedYearLevel] class of $courses[$selectedCourse] section $selectedSection, the top three intelligences of MI theory with the highest number of students that identified them as their strengths are as follows: " . implode(", ", $topStrengths) . ".\nOn the other hand, the top three intelligences of MI theory with the highest number of students that identified them as their weaknesses are as follows: " . implode(", ", $topWeaknesses) . ".";
-
-                                // Output the evaluation
-                                echo $evaluation;
-                                ?>
-                            </p>
-                        </div>
+                                    // Output the evaluation
+                                    echo $evaluation;
+                                    ?>
+                                </p>
+                            </div>
                     </div>
-                    <script>
-                        // Access the prepared data from PHP
-                        var labels = <?php echo json_encode($labels); ?>;
-                        var data = <?php echo json_encode($data); ?>;
+                <?php endif; ?>
+                <script>
+                    // Access the prepared data from PHP
+                    var labels = <?php echo json_encode($labels); ?>;
+                    var data = <?php echo json_encode($data); ?>;
 
-                        var dimensions = <?php echo json_encode($dimensions); ?>;
-                        var percentageAverages = <?php echo json_encode($averages); ?>;
+                    var dimensions = <?php echo json_encode($dimensions); ?>;
+                    var percentageAverages = <?php echo json_encode($averages); ?>;
 
-                        // Create the chart using Chart.js
-                        var ctx = document.getElementById('aqChart').getContext('2d');
-                        new Chart(ctx, {
-                            type: 'bar',
-                            data: {
-                                labels: labels,
-                                datasets: [{
-                                    label: 'Number of Records',
-                                    data: data,
-                                    backgroundColor: 'rgba(54, 162, 235, 0.7)', // Customize the bar color
-                                }]
+                    // Create the chart using Chart.js
+                    var ctx = document.getElementById('aqChart').getContext('2d');
+                    new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: 'Number of Records',
+                                data: data,
+                                backgroundColor: 'rgba(54, 162, 235, 0.7)', // Customize the bar color
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        precision: 0
+                                    }
+                                }
                             },
-                            options: {
-                                scales: {
-                                    y: {
-                                        beginAtZero: true,
-                                        ticks: {
-                                            precision: 0
-                                        }
+                            plugins: {
+                                datalabels: {
+                                    anchor: 'end',
+                                    align: 'end',
+                                    font: {
+                                        weight: 'bold'
+                                    },
+                                    color: '#333',
+                                    formatter: function(value) {
+                                        return value > 0 ? value : '';
+                                    }
+                                }
+                            }
+                        }
+                    });
+
+                    var aqChart2ctx = document.getElementById('aqChartDimensions').getContext('2d');
+                    new Chart(aqChart2ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: dimensions,
+                            datasets: [{
+                                label: 'Average Score of the Section (in %)',
+                                data: percentageAverages,
+                                backgroundColor: 'rgba(54, 162, 235, 0.7)', // Customize the bar color
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    max: 100,
+                                    ticks: {
+                                        precision: 0
                                     }
                                 },
-                                plugins: {
-                                    datalabels: {
-                                        anchor: 'end',
-                                        align: 'end',
-                                        font: {
-                                            weight: 'bold'
-                                        },
-                                        color: '#333',
-                                        formatter: function(value) {
-                                            return value > 0 ? value : '';
-                                        }
+                                x: {
+                                    grid: {
+                                        display: false
                                     }
                                 }
                             }
+                        }
+                    });
+                    // Access the transformed data
+                    var transformedData = <?php echo json_encode($transformedData); ?>;
+
+                    // Define the colors for each category
+                    var colors = {
+                        "Strength": "rgba(68, 114, 196, 0.7)",
+                        "Needs Attention": "rgba(237, 125, 49, 0.7)",
+                        "Development Priority": "rgba(165, 165, 165, 0.7)"
+                    };
+
+                    // Extract the Emotional Quotients and categories for the chart
+                    var eqLabels = Object.keys(transformedData);
+                    var categories = Object.keys(transformedData[eqLabels[0]]);
+
+                    // Create an array to store dataset objects
+                    var datasets = [];
+
+                    // Iterate through the categories to create datasets
+                    categories.forEach(function(category) {
+                        var data = [];
+
+                        // Iterate through the Emotional Quotients and retrieve the count for the category
+                        eqLabels.forEach(function(eqLabel) {
+                            data.push(transformedData[eqLabel][category]);
                         });
 
-                        var aqChart2ctx = document.getElementById('aqChartDimensions').getContext('2d');
-                        new Chart(aqChart2ctx, {
-                            type: 'bar',
-                            data: {
-                                labels: dimensions,
-                                datasets: [{
-                                    label: 'Average Score of the Section (in %)',
-                                    data: percentageAverages,
-                                    backgroundColor: 'rgba(54, 162, 235, 0.7)', // Customize the bar color
-                                }]
-                            },
-                            options: {
-                                scales: {
-                                    y: {
-                                        beginAtZero: true,
-                                        max: 100,
-                                        ticks: {
-                                            precision: 0
-                                        }
-                                    },
-                                    x: {
-                                        grid: {
-                                            display: false
-                                        }
-                                    }
-                                }
-                            }
-                        });
-                        // Access the transformed data
-                        var transformedData = <?php echo json_encode($transformedData); ?>;
-
-                        // Define the colors for each category
-                        var colors = {
-                            "Strength": "rgba(68, 114, 196, 0.7)",
-                            "Needs Attention": "rgba(237, 125, 49, 0.7)",
-                            "Development Priority": "rgba(165, 165, 165, 0.7)"
+                        // Create the dataset object
+                        var dataset = {
+                            label: category,
+                            data: data,
+                            backgroundColor: colors[category]
                         };
 
-                        // Extract the Emotional Quotients and categories for the chart
-                        var eqLabels = Object.keys(transformedData);
-                        var categories = Object.keys(transformedData[eqLabels[0]]);
+                        // Add the dataset to the array
+                        datasets.push(dataset);
+                    });
 
-                        // Create an array to store dataset objects
-                        var datasets = [];
-
-                        // Iterate through the categories to create datasets
-                        categories.forEach(function(category) {
-                            var data = [];
-
-                            // Iterate through the Emotional Quotients and retrieve the count for the category
-                            eqLabels.forEach(function(eqLabel) {
-                                data.push(transformedData[eqLabel][category]);
-                            });
-
-                            // Create the dataset object
-                            var dataset = {
-                                label: category,
-                                data: data,
-                                backgroundColor: colors[category]
-                            };
-
-                            // Add the dataset to the array
-                            datasets.push(dataset);
-                        });
-
-                        // Create the chart using Chart.js
-                        var eqChartCtx = document.getElementById('eqChart').getContext('2d');
-                        new Chart(eqChartCtx, {
-                            type: 'bar',
-                            data: {
-                                labels: eqLabels,
-                                datasets: datasets
-                            },
-                            options: {
-                                scales: {
-                                    x: {
-                                        stacked: false // Disable stacking on the x-axis
-                                    },
-                                    y: {
-                                        stacked: false, // Disable stacking on the y-axis
-                                        beginAtZero: true,
-                                        ticks: {
-                                            precision: 0
-                                        }
-                                    }
-                                }
-                            }
-                        });
-
-                        var iqCounts = <?php echo json_encode($iqCounts); ?>;
-
-                        // Extract the IQ categories and counts
-                        var iqCategories = Object.keys(iqCounts);
-                        var iqCountsData = Object.values(iqCounts);
-
-                        // Create the chart using Chart.js
-                        var iqCtx = document.getElementById('iqChart').getContext('2d');
-                        new Chart(iqCtx, {
-                            type: 'bar',
-                            data: {
-                                labels: iqCategories,
-                                datasets: [{
-                                    label: 'IQ Result Counts',
-                                    data: iqCountsData,
-                                    backgroundColor: 'rgba(68, 114, 196, 0.7)' // Adjust the color as needed
-                                }]
-                            },
-                            options: {
-                                scales: {
-                                    x: {
-                                        beginAtZero: true
-                                    },
-                                    y: {
-                                        beginAtZero: true,
-                                        ticks: {
-                                            precision: 0
-                                        }
-                                    }
-                                }
-                            }
-                        });
-
-                        var intelligences = <?php echo json_encode($intelligences); ?>;
-                        var data = <?php echo json_encode($data); ?>;
-
-                        var MiCTX = document.getElementById('rankChart').getContext('2d');
-                        new Chart(MiCTX, {
-                            type: 'bar',
-                            data: {
-                                labels: intelligences,
-                                datasets: data
-                            },
-                            options: {
-                                indexAxis: 'x',
-                                plugins: {
-                                    legend: {
-                                        position: 'bottom',
-                                    },
+                    // Create the chart using Chart.js
+                    var eqChartCtx = document.getElementById('eqChart').getContext('2d');
+                    new Chart(eqChartCtx, {
+                        type: 'bar',
+                        data: {
+                            labels: eqLabels,
+                            datasets: datasets
+                        },
+                        options: {
+                            scales: {
+                                x: {
+                                    stacked: false // Disable stacking on the x-axis
                                 },
-                                scales: {
-                                    x: {
-                                        beginAtZero: true,
-                                    },
-                                    y: {
-                                        beginAtZero: true,
-                                        ticks: {
-                                            precision: 0
-                                        }
+                                y: {
+                                    stacked: false, // Disable stacking on the y-axis
+                                    beginAtZero: true,
+                                    ticks: {
+                                        precision: 0
                                     }
                                 }
                             }
-                        });
-                    </script>
+                        }
+                    });
+
+                    var iqCounts = <?php echo json_encode($iqCounts); ?>;
+
+                    // Extract the IQ categories and counts
+                    var iqCategories = Object.keys(iqCounts);
+                    var iqCountsData = Object.values(iqCounts);
+
+                    // Create the chart using Chart.js
+                    var iqCtx = document.getElementById('iqChart').getContext('2d');
+                    new Chart(iqCtx, {
+                        type: 'bar',
+                        data: {
+                            labels: iqCategories,
+                            datasets: [{
+                                label: 'IQ Result Counts',
+                                data: iqCountsData,
+                                backgroundColor: 'rgba(68, 114, 196, 0.7)' // Adjust the color as needed
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                x: {
+                                    beginAtZero: true
+                                },
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        precision: 0
+                                    }
+                                }
+                            }
+                        }
+                    });
+
+                    var intelligences = <?php echo json_encode($intelligences); ?>;
+                    var data = <?php echo json_encode($data); ?>;
+
+                    var MiCTX = document.getElementById('rankChart').getContext('2d');
+                    new Chart(MiCTX, {
+                        type: 'bar',
+                        data: {
+                            labels: intelligences,
+                            datasets: data
+                        },
+                        options: {
+                            indexAxis: 'x',
+                            plugins: {
+                                legend: {
+                                    position: 'bottom',
+                                },
+                            },
+                            scales: {
+                                x: {
+                                    beginAtZero: true,
+                                },
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        precision: 0
+                                    }
+                                }
+                            }
+                        }
+                    });
+                </script>
                 </div>
             </div>
         </div>
