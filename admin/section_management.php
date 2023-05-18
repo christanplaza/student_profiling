@@ -279,17 +279,17 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
         }
 
         // Prepare the data for the bar graph
-        $data = [];
+        $mi_data = [];
 
         // Generate data for strengths
-        $data[] = [
+        $mi_data[] = [
             "label" => "Strengths",
             "data" => $strengths,
             "backgroundColor" => "rgba(68, 114, 196, 0.7)", // Adjust the color as needed
         ];
 
         // Generate data for weaknesses
-        $data[] = [
+        $mi_data[] = [
             "label" => "Weaknesses",
             "data" => $weaknesses,
             "backgroundColor" => "rgba(192, 0, 0, 0.7)", // Adjust the color as needed
@@ -390,7 +390,7 @@ include('../logout.php');
                             }
 
                             // Construct the paragraph dynamically
-                            $paragraph = "<p>FOR THE SECOND GRAPH: The Adversity Quotient dimension that received the highest average score from the students is $highestKey with $highestValue%, followed by";
+                            $paragraph = "<p>FOR THE SECOND GRAPH: The Adversity Quotient dimension that received the highest average score from the student(s) is $highestKey with $highestValue%, followed by";
                             foreach ($otherDimensions as $key => $value) {
                                 $paragraph .= " $key with $value%";
                                 if (next($otherDimensions)) {
@@ -409,7 +409,7 @@ include('../logout.php');
                             <div class="col-12 mt-4">
                                 <p>
                                     FOR THE FIRST GRAPH: Among the <?= $total_aq_eval_count ?> total number of assessment takers from the class of <?= $yearlevel[$selectedYearLevel] ?> BS in <?= $courses[$selectedCourse] ?> section <?= $selectedSection ?>,
-                                    majority of the class (<?= $dimensionsCount[$keyMaxAverage] ?> students) received a <?= $keyMaxAverage ?> Adversity Quotient grade classification. On the contrary, the least number of students (<?= $dimensionsCount[$keyMinAverage] ?> in total) received a <?= $keyMinAverage ?> Adversity Quotient grade classification.
+                                    majority of the class (<?= $dimensionsCount[$keyMaxAverage] ?> student(s)) received a <?= $keyMaxAverage ?> Adversity Quotient grade classification. On the contrary, the least number of student(s) (<?= $dimensionsCount[$keyMinAverage] ?> in total) received a <?= $keyMinAverage ?> Adversity Quotient grade classification.
                                 </p>
                                 <p><?= $paragraph ?></p>
                             </div>
@@ -422,10 +422,89 @@ include('../logout.php');
                             <div class="col-12 mt-4">
                                 <?php
                                 // Generate the descriptive results template with the populated data
+                                $eq_focus = [
+                                    "Strength" => [],
+                                    "Needs Attention" => [],
+                                    "Development Priority" => [],
+                                ];
+
+                                foreach ($transformedData as $key => $eq) {
+
+                                    foreach ($eq_focus as $fKey => $focus) {
+                                        $eq_focus[$fKey][] = array($key => $eq[$fKey]);
+                                    }
+                                }
+
+                                // Custom comparison function to sort the values in descending order
+                                function sortByValueDesc($a, $b)
+                                {
+                                    $valueA = reset($a);
+                                    $valueB = reset($b);
+                                    return $valueB - $valueA;
+                                }
+
+
+                                // Sort the values in each category from largest to smallest
+                                foreach ($eq_focus as &$category) {
+                                    usort($category, 'sortByValueDesc');
+                                }
+
+                                // Define an array to store the maximum values and remaining counts for each category
+                                $results = [];
+
+                                // Iterate over each category (Strength, Needs Attention, Development Priority)
+                                foreach ($eq_focus as $categoryName => &$category) {
+                                    $maxValue = null;
+                                    $remainingCount = 0;
+
+                                    // Find the maximum value in the category and count the remaining records
+                                    foreach ($category as $record) {
+                                        $value = reset($record);
+                                        if ($maxValue === null || $value > $maxValue) {
+                                            $maxValue = $value;
+                                            $remainingCount = 1;
+                                        } elseif ($value === $maxValue) {
+                                            $remainingCount++;
+                                        }
+                                    }
+
+                                    // Remove records with values less than the maximum
+                                    $category = array_filter($category, function ($record) use ($maxValue) {
+                                        $value = reset($record);
+                                        return $value === $maxValue;
+                                    });
+
+                                    // Store the maximum value and remaining count for the category
+                                    $results[$categoryName] = [
+                                        'maxValue' => $maxValue,
+                                        'remainingCount' => $remainingCount
+                                    ];
+                                }
+
+                                // Output the updated array, maximum values, and remaining counts
+                                $result = [
+                                    'eq_focus' => $eq_focus,
+                                    'results' => $results
+                                ];
+
+                                function concatenateKeys($category)
+                                {
+                                    $count = count($category);
+                                    $keys = array_map(function ($record) {
+                                        return key($record);
+                                    }, $category);
+
+                                    if ($count > 1) {
+                                        $keys[$count - 1] = 'and ' . $keys[$count - 1];
+                                    }
+
+                                    return implode(', ', $keys);
+                                }
+
                                 $eq_description = "In the $yearlevel[$selectedYearLevel] class of BS in $courses[$selectedCourse] section $selectedSection, the competencies in which more students think it is their strength, or one that needs attention, or a development priority are as follows:<br/><br/>
-                            Strength = " . ($strengthCount > 0 ? $strengthEQ . " with " . $strengthCount . " students" : "-") . "<br/>
-                            Needs Attention = " . ($needsAttentionCount > 0 ? $needsAttentionEQ . " with " . $needsAttentionCount . " students" : "-") . "<br/>
-                            Development Priority = " . ($developmentPriorityCount > 0 ? $developmentPriorityEQ . " with " . $developmentPriorityCount . " students" : "-");
+                                Strength = " . ($result['results']['Strength']['maxValue'] > 0 ? concatenateKeys($result['eq_focus']['Strength']) . " with " . $strengthCount . " student(s)" : "No results") . "<br/>
+                                Needs Attention = " . ($result['results']['Needs Attention']['maxValue'] > 0 ? concatenateKeys($result['eq_focus']['Needs Attention']) . " with " . $needsAttentionCount . " student(s)" : "No results") . "<br/>
+                                Development Priority = " . ($result['results']['Development Priority']['maxValue'] > 0 ? concatenateKeys($result['eq_focus']['Development Priority']) . " with " . $developmentPriorityCount . " student(s)" : "No results");
                                 ?>
                                 <p><?= $eq_description ?></p>
                             </div>
@@ -443,7 +522,7 @@ include('../logout.php');
                                 arsort($sortedIqCounts);
 
                                 // Generate the evaluation text based on the IQ result counts
-                                $evaluationText = "As shown in the graph, most students ($totalStudents in total) from $yearlevel[$selectedYearLevel] BS $courses[$selectedCourse] section $selectedSection have a/an ";
+                                $evaluationText = "As shown in the graph, most student(s) ($totalStudents in total) from $yearlevel[$selectedYearLevel] BS $courses[$selectedCourse] section $selectedSection have a/an ";
 
                                 // Get the IQ category with the highest count
                                 $maxCount = max($sortedIqCounts);
@@ -455,7 +534,7 @@ include('../logout.php');
                                 $remainingText = "";
                                 foreach ($sortedIqCounts as $index => $count) {
                                     $category = $index;
-                                    $remainingText .= $category . " IQ scores with $count students, ";
+                                    $remainingText .= $category . " IQ scores with $count student(s), ";
                                     if ($index < count($sortedIqCounts) - 1) {
                                         $remainingText .= " and ";
                                     }
@@ -514,7 +593,7 @@ include('../logout.php');
                                     $topWeaknesses = array_slice(array_keys($weaknesses), 0, 3);
 
                                     // Generate the text evaluation
-                                    $evaluation = "The graph shows that in the $yearlevel[$selectedYearLevel] class of $courses[$selectedCourse] section $selectedSection, the top three intelligences of MI theory with the highest number of students that identified them as their strengths are as follows: " . implode(", ", $topStrengths) . ".\nOn the other hand, the top three intelligences of MI theory with the highest number of students that identified them as their weaknesses are as follows: " . implode(", ", $topWeaknesses) . ".";
+                                    $evaluation = "The graph shows that in the $yearlevel[$selectedYearLevel] class of $courses[$selectedCourse] section $selectedSection, the top three intelligences of MI theory with the highest number of student(s) that identified them as their strengths are as follows: " . implode(", ", $topStrengths) . ".\nOn the other hand, the top three intelligences of MI theory with the highest number of student(s) that identified them as their weaknesses are as follows: " . implode(", ", $topWeaknesses) . ".";
 
                                     // Output the evaluation
                                     echo $evaluation;
@@ -691,7 +770,7 @@ include('../logout.php');
                     });
 
                     var intelligences = <?php echo json_encode($intelligences); ?>;
-                    var data = <?php echo json_encode($data); ?>;
+                    var data = <?php echo json_encode($mi_data); ?>;
 
                     var MiCTX = document.getElementById('rankChart').getContext('2d');
                     new Chart(MiCTX, {
