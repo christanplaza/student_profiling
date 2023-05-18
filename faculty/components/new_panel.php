@@ -27,6 +27,11 @@
                 Password Reset Requests
             </a>
         </li>
+        <li class="nav-item">
+            <a href="<?= $rootURL ?>/faculty/section_management.php" class="nav-link text-white" aria-current="page">
+                Section Management
+            </a>
+        </li>
     </ul>
     <hr>
     <div class="dropdown">
