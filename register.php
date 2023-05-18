@@ -101,7 +101,7 @@ if (isset($_POST['submit'])) {
                             </div>
                             <div class="form-floating mb-3">
                                 <input type="text" name="username" class="form-control" placeholder="JohnDoe27" required>
-                                <label for="floatingInput">TUPV ID</label>
+                                <label for="floatingInput">TUPV ID (e.g., TUPV-XX-XXXX)</label>
                             </div>
                             <div class="form-floating mb-3 input-group">
                                 <input type="password" name="password" class="form-control" id="password" required>
