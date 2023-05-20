@@ -71,7 +71,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
             $aq["o"] = ($aq["Ownership"] / 100) * 40;
             $aq["r"] = ($aq["Reach"] / 100) * 25;
             $aq["e"] = ($aq["Endurance"] / 100) * 10;
-            $aq["ARP"] = ($aq["c"] + $aq["o"] + $aq["r"] + $aq["e"]) * 2;
+            $aq["ARP"] = (($aq["c"] + $aq["o"] + $aq["r"] + $aq["e"]) * 2);
             $score = "";
             if ($aq["ARP"] <= 59) {
                 $score = "Very Low";
@@ -504,9 +504,9 @@ include('../logout.php');
                                         }
 
                                         $eq_description = "In the $yearlevel[$selectedYearLevel] class of BS in $courses[$selectedCourse] section $selectedSection, the competencies in which more students think it is their strength, or one that needs attention, or a development priority are as follows:<br/><br/>
-                                Strength = " . ($result['results']['Strength']['maxValue'] > 0 ? concatenateKeys($result['eq_focus']['Strength']) . " with " . $strengthCount . " student(s)" : "No results") . "<br/>
-                                Needs Attention = " . ($result['results']['Needs Attention']['maxValue'] > 0 ? concatenateKeys($result['eq_focus']['Needs Attention']) . " with " . $needsAttentionCount . " student(s)" : "No results") . "<br/>
-                                Development Priority = " . ($result['results']['Development Priority']['maxValue'] > 0 ? concatenateKeys($result['eq_focus']['Development Priority']) . " with " . $developmentPriorityCount . " student(s)" : "No results");
+                                        Strength = " . ($result['results']['Strength']['maxValue'] > 0 ? concatenateKeys($result['eq_focus']['Strength']) . " with " . $strengthCount . " student(s)" : "No results") . "<br/>
+                                        Needs Attention = " . ($result['results']['Needs Attention']['maxValue'] > 0 ? concatenateKeys($result['eq_focus']['Needs Attention']) . " with " . $needsAttentionCount . " student(s)" : "No results") . "<br/>
+                                        Development Priority = " . ($result['results']['Development Priority']['maxValue'] > 0 ? concatenateKeys($result['eq_focus']['Development Priority']) . " with " . $developmentPriorityCount . " student(s)" : "No results");
                                         ?>
                                         <p><?= $eq_description ?></p>
                                     </div>

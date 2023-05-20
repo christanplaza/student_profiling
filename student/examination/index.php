@@ -535,22 +535,33 @@ if ($conn) {
                     $r = ["3", "5", "10", "14", "19"];
                     $e = ["4", "8"];
 
-                    $questionCount = mysqli_num_rows($questions_res);
+                    $questionCount = count($responses) / 2;
 
                     $c_total = 0;
                     $o_total = 0;
                     $r_total = 0;
                     $e_total = 0;
 
+                    $adversities = [
+                        "control" => [],
+                        "ownership" => [],
+                        "reach" => [],
+                        "endurance" => []
+                    ];
+
                     for ($i = 1; $i <= $questionCount; $i++) {
                         if (in_array($i, $c)) {
                             $c_total += (int)$responses["question" . $i . "_answer"];
+                            $adversities["control"][] = (int)$responses["question" . $i . "_answer"];
                         } else if (in_array($i, $o)) {
                             $o_total += (int)$responses["question" . $i . "_answer"];
+                            $adversities["ownership"][] = (int)$responses["question" . $i . "_answer"];
                         } else if (in_array($i, $r)) {
                             $r_total += (int)$responses["question" . $i . "_answer"];
+                            $adversities["reach"][] = (int)$responses["question" . $i . "_answer"];
                         } else if (in_array($i, $e)) {
                             $e_total += (int)$responses["question" . $i . "_answer"];
+                            $adversities["endurance"][] = (int)$responses["question" . $i . "_answer"];
                         }
                     }
 
@@ -607,10 +618,23 @@ if ($conn) {
                         "Endurance" => $e_percentage
                     );
 
+                    $summary = [
+                        "adversities" => $adversities,
+                        "raw_core" => array(
+                            "control" => $c_total,
+                            "ownership" => $o_total,
+                            "reach" => $r_total,
+                            "endurance" => $e_total
+                        ),
+                        "final_arp_score" => $final_arp_score,
+                        "arp_result" => $score,
+                        "percentage_core" => $results
+                    ];
 
                     $data = array(
                         'type' => 'aq',
-                        'value' => $results
+                        'value' => $results,
+                        'summary' => $summary
                     );
 
                     $evaluation_json = json_encode($data);
