@@ -75,8 +75,8 @@ include('../logout.php');
                                             </td>
                                             <td>
                                                 <div class="input-group">
-                                                    <input type="password" name="password" class="form-control" id="password" value="<?= $row['reset_key']; ?>" readonly>
-                                                    <span class="input-group-text" onclick="togglePasswordVisibility()">
+                                                    <input type="password" name="password" class="form-control" id="password<?= $row['id'] ?>" value="<?= $row['reset_key']; ?>" readonly>
+                                                    <span class="input-group-text" onclick="togglePasswordVisibility(<?= $row['id'] ?>)">
                                                         <i class="bi bi-eye-slash" id="icon"></i>
                                                     </span>
                                                 </div>
@@ -93,8 +93,8 @@ include('../logout.php');
     </div>
 </body>
 <script>
-    function togglePasswordVisibility() {
-        const passwordInput = document.getElementById("password");
+    function togglePasswordVisibility(id) {
+        const passwordInput = document.getElementById("password" + id);
         const icon = document.getElementById("icon");
 
         if (passwordInput.type == "password") {
